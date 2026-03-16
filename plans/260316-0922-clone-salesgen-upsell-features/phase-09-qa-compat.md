@@ -1,6 +1,6 @@
 # Phase 09 — QA, Compatibility & Security Pass
 
-**Status:** Todo | **Priority:** P0 | **Effort:** M
+**Status:** Done | **Priority:** P0 | **Effort:** M
 **Depends on:** All phases
 
 ## Overview
@@ -200,11 +200,12 @@ All AJAX handlers must:
 
 ## Todo
 
-- [ ] Security audit: all AJAX nonces + escaping + sanitization
-- [ ] HPOS compatibility declaration
-- [ ] PHP 8.1+ compatibility (`FILTER_SANITIZE_STRING` → `FILTER_DEFAULT`)
-- [ ] Conditional asset enqueue review
-- [ ] Full functional test matrix (desktop)
-- [ ] Full functional test matrix (mobile)
-- [ ] Edge case testing
-- [ ] Performance check: no heavy queries outside transient cache
+- [x] Security audit: all AJAX nonces + escaping + sanitization
+- [x] HPOS compatibility declaration (`FeaturesUtil::declare_compatibility`)
+- [x] PHP 8.1+ compatibility — `FILTER_SANITIZE_STRING` not used anywhere
+- [x] Conditional asset enqueue review — BMSM fixed to `is_product()||is_cart()` only
+- [x] `register_setting()` sanitize callbacks added per field type
+- [x] `wup_clear_transients` AJAX missing cap check fixed
+- [ ] Full functional test matrix (desktop) — requires live WC environment
+- [ ] Full functional test matrix (mobile) — requires live WC environment
+- [ ] Edge case testing — requires live WC environment

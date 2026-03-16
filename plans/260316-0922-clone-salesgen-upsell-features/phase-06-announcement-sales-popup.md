@@ -1,6 +1,6 @@
 # Phase 06 — Announcement Bars + Sales Popups (Social Proof)
 
-**Status:** Todo | **Priority:** P1 | **Effort:** M
+**Status:** Done | **Priority:** P1 | **Effort:** M
 **Depends on:** Phase 00
 
 ---

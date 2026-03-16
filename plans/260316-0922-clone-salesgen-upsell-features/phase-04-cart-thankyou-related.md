@@ -1,6 +1,6 @@
 # Phase 04 — Cart Upsell + Thank-you Upsell + Related Products
 
-**Status:** Todo | **Priority:** P0 | **Effort:** M
+**Status:** Done | **Priority:** P0 | **Effort:** M
 **Depends on:** Phase 01
 
 ## Overview
@@ -182,12 +182,12 @@ Card HTML structure (from salesgen render.php):
 
 ## Todo
 
-- [ ] `includes/features/class-wup-renderer.php` (shared cross-sell renderer)
-- [ ] `includes/features/class-wup-cart-upsell.php` + AJAX + shortcode
-- [ ] `templates/cart-upsell.php`
-- [ ] `public/js/src/cart-upsell.js`
-- [ ] `public/css/src/cart-upsell.scss`
-- [ ] `includes/features/class-wup-thankyou-upsell.php`
-- [ ] `includes/features/class-wup-related.php` + shortcode
-- [ ] Cart items → source resolver dedup + exclude in-cart
-- [ ] Order items → source resolver dedup + exclude purchased
+- [x] `includes/features/class-wup-renderer.php` (shared cross-sell renderer)
+- [x] `includes/features/class-wup-cart-upsell.php` + AJAX + shortcode
+- [x] `templates/cart-upsell.php`
+- [x] `public/js/src/cart-upsell.js`
+- [x] `public/css/src/cart-upsell.scss`
+- [x] `includes/features/class-wup-thankyou-upsell.php`
+- [x] `includes/features/class-wup-related.php` + shortcode
+- [x] Cart items → source resolver dedup + exclude in-cart
+- [x] Order items → source resolver dedup + exclude purchased
