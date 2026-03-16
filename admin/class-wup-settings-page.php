@@ -89,7 +89,12 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 
 			check_admin_referer( 'wup_save_settings', 'wup_nonce' );
 
-			foreach ( $this->get_schema() as $field ) {
+			// Only save fields for the active tab — other tabs' fields are not in $_POST,
+			// so iterating all schema would reset their checkbox values to 'no'.
+			$active_tab = sanitize_key( $_GET['tab'] ?? array_key_first( $this->tabs ) );
+			$schema     = array_filter( $this->get_schema(), fn( $f ) => ( $f['tab'] ?? '' ) === $active_tab );
+
+			foreach ( $schema as $field ) {
 				$key = sanitize_key( $field['id'] ?? '' );
 				if ( ! $key ) {
 					continue;
@@ -120,7 +125,7 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 			add_settings_error( 'wup_messages', 'wup_saved', __( 'Settings saved.', 'woo-upsell-pro' ), 'updated' );
 			set_transient( 'settings_errors', get_settings_errors(), 30 );
 
-			wp_safe_redirect( add_query_arg( [ 'page' => 'wup-settings', 'tab' => sanitize_key( $_GET['tab'] ?? '' ), 'settings-updated' => 'true' ], admin_url( 'admin.php' ) ) );
+			wp_safe_redirect( add_query_arg( [ 'page' => 'wup-settings', 'tab' => sanitize_key( $_GET['tab'] ?? array_key_first( $this->tabs ) ), 'settings-updated' => 'true' ], admin_url( 'admin.php' ) ) );
 			exit;
 		}
 

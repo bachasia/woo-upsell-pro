@@ -96,8 +96,8 @@ if ( ! class_exists( 'WUP_Announcement' ) ) {
 			return [
 				'text'       => wup_get_option( "{$prefix}_text", '' ),
 				'bgcolor'    => wup_get_option( "{$prefix}_bgcolor", '#FFFFFF' ),
-				'text_color' => wup_get_option( "{$prefix}_text_color", '#FFFFFF' ),
-				'text_size'  => wup_get_option( "{$prefix}_text_size", 'default' ),
+				'text_color' => wup_get_option( "{$prefix}_color", '#FFFFFF' ),
+				'text_size'  => wup_get_option( "{$prefix}_fontsize", 'default' ),
 				'text_align' => wup_get_option( "{$prefix}_text_align", '' ),
 				'bgpattern'  => wup_get_option( "{$prefix}_bgpattern", 'default' ),
 				'bgimage'    => wup_get_option( "{$prefix}_bgimage", '' ),

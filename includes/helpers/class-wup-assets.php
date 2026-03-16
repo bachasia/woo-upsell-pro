@@ -58,13 +58,16 @@ if ( ! class_exists( 'WUP_Assets' ) ) {
 			$this->output_dynamic_css();
 		}
 
-		/** Register the primary public stylesheet (empty placeholder until features add CSS). */
+		/** Register the primary public stylesheet with robust cache-busting version. */
 		private function register_public_styles(): void {
+			$css_path = WUP_PUBLIC_DIR . 'css/wup-public.css';
+			$stamp    = file_exists( $css_path ) ? (string) filemtime( $css_path ) : WUP_VERSION;
+			$version  = WUP_VERSION . '-' . $stamp;
 			wp_register_style(
 				'wup-public-styles',
 				WUP_URL . 'public/css/wup-public.css',
 				[],
-				WUP_VERSION
+				$version
 			);
 			wp_enqueue_style( 'wup-public-styles' );
 		}

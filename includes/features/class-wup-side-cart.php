@@ -138,9 +138,13 @@ if ( ! class_exists( 'WUP_Side_Cart' ) ) {
 		// Assets
 		// ------------------------------------------------------------------ //
 
-		/** Enqueue side cart JS and pass localised config. */
+		/** Enqueue side cart JS and pass localised config. Only loads when side cart is enabled. */
 		public function enqueue_assets(): void {
 			if ( is_admin() ) {
+				return;
+			}
+
+			if ( wup_get_option( 'wup_upsell_sidecart_enable', 'no' ) !== 'yes' ) {
 				return;
 			}
 
@@ -149,8 +153,9 @@ if ( ! class_exists( 'WUP_Side_Cart' ) ) {
 			wp_localize_script( 'wup-sidecart', 'wupSideCart', [
 				'ajax_url'      => admin_url( 'admin-ajax.php' ),
 				'nonce'         => wp_create_nonce( 'wup-side-cart' ),
-				'open_selector' => wup_get_option( 'wup_upsell_sidecart_open_selector', '.header-cart-link' ),
-				'auto_open'     => wup_get_option( 'wup_upsell_sidecart_enable', 'no' ) === 'yes',
+				// Default matches settings schema default '.cart-contents'.
+				'open_selector' => wup_get_option( 'wup_upsell_sidecart_open_selector', '.cart-contents' ),
+				'auto_open'     => true,
 			] );
 		}
 	}

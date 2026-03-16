@@ -47,7 +47,8 @@ if ( ! class_exists( 'WUP_BuyMoreSaveMore' ) ) {
 				$position = wup_get_option( 'wup_bmsm_position', 'woocommerce_after_add_to_cart_form' );
 				$priority = intval( wup_get_option( 'wup_bmsm_priority', 50 ) );
 
-				if ( $position ) {
+				// 'shortcode_only' means no automatic hook — use [wup_bmsm] shortcode.
+				if ( $position && 'shortcode_only' !== $position ) {
 					add_action( $position, [ $this, 'render_bmsm' ], $priority );
 				}
 
@@ -61,8 +62,12 @@ if ( ! class_exists( 'WUP_BuyMoreSaveMore' ) ) {
 		// Rendering
 		// ------------------------------------------------------------------ //
 
-		/** Render BMSM widget. Called from hook or shortcode. */
-		public function render_bmsm( array $atts = [] ): void {
+		/** Render BMSM widget. Called from WC action hook or shortcode. */
+		public function render_bmsm( $atts = [] ): void {
+			// WC action hooks pass a string; normalize to array for shortcode compatibility.
+			if ( ! is_array( $atts ) ) {
+				$atts = [];
+			}
 			if ( 'yes' !== wup_get_option( 'wup_bmsm_enable', 'no' ) ) {
 				return;
 			}
@@ -78,14 +83,26 @@ if ( ! class_exists( 'WUP_BuyMoreSaveMore' ) ) {
 				}
 			}
 
-			$style  = $atts['style'] ?? wup_get_option( 'wup_bmsm_style', 'style1' );
-			$layout = in_array( $style, [ 'style4' ], true ) ? 'style4' : 'default';
+			$style = $atts['style'] ?? wup_get_option( 'wup_bmsm_style', 'style1' );
+
+			// Map style key → template filename.
+			$layout_map = [
+				'style1' => 'default',
+				'style2' => 'style2',
+				'style3' => 'style3',
+				'style4' => 'style4',
+				'style5' => 'style5',
+			];
+			$layout = $layout_map[ $style ] ?? 'default';
 
 			$conditional   = wup_get_option( 'wup_bmsm_conditional', 'items' );
 			$tiers         = $this->parse_tiers( $conditional );
 			$current_value = $conditional === 'items'
 				? (float) $this->get_cart_item_count()
 				: $this->get_cart_subtotal();
+
+			// Pass product price so price-aware templates can compute discounted amounts.
+			$product_price = ( $product instanceof WC_Product ) ? (float) $product->get_price() : 0;
 
 			$bmsm_data = [
 				'tiers'         => $tiers,
@@ -94,6 +111,7 @@ if ( ! class_exists( 'WUP_BuyMoreSaveMore' ) ) {
 				'current_value' => $current_value,
 				'conditional'   => $conditional,
 				'options'       => $this->collect_options(),
+				'product_price' => $product_price,
 			];
 
 			include WUP_TEMPLATES_DIR . 'bmsm/' . $layout . '.php';
@@ -174,7 +192,7 @@ if ( ! class_exists( 'WUP_BuyMoreSaveMore' ) ) {
 			$tpl = wup_get_option( $key_tpl, $defaults );
 
 			return '<div class="wup-bmsm-notice">' . str_replace(
-				[ '[discount_amount]', '[items_count]' ],
+				[ '[discount_amount]', '[discount]', '[items_count]' ],
 				[ $tier['discount'], (int) $current_value ],
 				$tpl
 			) . '</div>';

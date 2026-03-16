@@ -1,9 +1,11 @@
 <?php
 /**
- * BMSM style4 template — professional card layout with progress bar.
+ * BMSM style3 template — Flash Card layout.
  *
- * Expected: $bmsm_data array with keys:
- *   tiers, active_tier, next_tier, current_value, conditional, options
+ * Each tier = rounded card with "Flash Sale" ribbon.
+ * Left column: Discount X% + Total (discounted vs original).
+ * Right column: Buy N to get + price per item.
+ * Requires $bmsm_data['product_price'] for price display.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,6 +18,7 @@ $next_tier     = $bmsm_data['next_tier']      ?? null;
 $current_value = $bmsm_data['current_value'] ?? 0;
 $conditional   = $bmsm_data['conditional']   ?? 'items';
 $opts          = $bmsm_data['options']        ?? [];
+$product_price = $bmsm_data['product_price'] ?? 0;
 
 if ( empty( $tiers ) ) {
 	return;
@@ -25,18 +28,9 @@ $is_items      = $conditional === 'items';
 $heading_en    = ( $opts['heading_enable'] ?? 'yes' ) === 'yes';
 $hide_congrats = ( $opts['hide_congrats'] ?? 'no' ) === 'yes';
 $hide_remain   = ( $opts['hide_remain'] ?? 'no' ) === 'yes';
-
-// Progress bar calculation — percent toward next tier (or 100% if max tier active).
-$highest_min = (float) end( $tiers )['min'];
-if ( $active_tier && ! $next_tier ) {
-	$progress_pct = 100;
-} elseif ( $next_tier && $next_tier['min'] > 0 ) {
-	$progress_pct = (int) min( 100, round( ( $current_value / $next_tier['min'] ) * 100 ) );
-} else {
-	$progress_pct = 0;
-}
+$show_price    = $is_items && $product_price > 0;
 ?>
-<div class="wup-bmsm wup-bmsm-style4">
+<div class="wup-bmsm wup-bmsm-style3">
 	<?php if ( $heading_en ) : ?>
 	<div class="wup-bmsm-header">
 		<h3 class="wup-bmsm-heading"><?php echo esc_html( $opts['heading'] ?? '' ); ?></h3>
@@ -46,38 +40,63 @@ if ( $active_tier && ! $next_tier ) {
 	</div>
 	<?php endif; ?>
 
-	<div class="wup-bmsm-cards">
-		<?php
-		$last_index = count( $tiers ) - 1;
-		foreach ( $tiers as $i => $tier ) :
-			$is_active  = $active_tier && $tier['min'] === $active_tier['min'];
-			$is_best    = ( $i === $last_index );
-			$card_class = $is_active ? ' wup-bmsm-tier-active' : '';
-			$card_class .= $is_best ? ' wup-bmsm-card-best' : '';
+	<div class="wup-bmsm-s3-list">
+		<span class="wup-bmsm-s3-flash"><?php esc_html_e( 'Flash Sale', 'wup-upsell-pro' ); ?></span>
+		<?php foreach ( $tiers as $tier ) :
+			$is_active   = $active_tier && $tier['min'] === $active_tier['min'];
+			$card_class  = $is_active ? ' wup-bmsm-tier-active' : '';
+			$disc_pct    = (float) $tier['discount'];
+			$disc_price  = $show_price ? round( $product_price * ( 1 - $disc_pct / 100 ), 2 ) : 0;
+			$orig_total  = $show_price ? $product_price * (int) $tier['min'] : 0;
+			$disc_total  = $show_price ? $disc_price * (int) $tier['min'] : 0;
 		?>
-		<div class="wup-bmsm-card<?php echo esc_attr( $card_class ); ?>"
+		<div class="wup-bmsm-s3-card<?php echo esc_attr( $card_class ); ?>"
 		     data-min="<?php echo esc_attr( $tier['min'] ); ?>"
 		     data-discount="<?php echo esc_attr( $tier['discount'] ); ?>">
-			<?php if ( $is_best && ! $is_active ) : ?>
-			<span class="wup-bmsm-best-ribbon"><?php esc_html_e( 'Best', 'wup-upsell-pro' ); ?></span>
-			<?php endif; ?>
-			<div class="wup-bmsm-badge"><?php echo esc_html( $tier['discount'] . '%' ); ?></div>
-			<div class="wup-bmsm-card-off"><?php esc_html_e( 'OFF', 'wup-upsell-pro' ); ?></div>
-			<div class="wup-bmsm-card-label">
+			<div class="wup-bmsm-s3-left">
+				<div class="wup-bmsm-s3-disc-label">
+					<?php esc_html_e( 'Discount', 'wup-upsell-pro' ); ?>
+					<strong class="wup-bmsm-s3-pct"><?php echo esc_html( $tier['discount'] . '%' ); ?></strong>
+				</div>
+				<?php if ( $show_price ) : ?>
+				<div class="wup-bmsm-s3-totals">
+					<?php esc_html_e( 'Total', 'wup-upsell-pro' ); ?>
+					<strong><?php echo wp_kses_post( wc_price( $disc_total ) ); ?></strong>
+					<del><?php echo wp_kses_post( wc_price( $orig_total ) ); ?></del>
+				</div>
+				<?php endif; ?>
+			</div>
+			<div class="wup-bmsm-s3-right">
 				<?php if ( $is_items ) : ?>
-					<?php printf( esc_html__( 'Buy %d+ items', 'wup-upsell-pro' ), $tier['min'] ); ?>
+				<div class="wup-bmsm-s3-buy-label">
+					<?php printf(
+						/* translators: %d = quantity */
+						esc_html__( 'Buy %d to get', 'wup-upsell-pro' ),
+						(int) $tier['min']
+					); ?>
+				</div>
+				<?php if ( $show_price ) : ?>
+				<div class="wup-bmsm-s3-price-each">
+					<del><?php echo wp_kses_post( wc_price( $product_price ) ); ?></del>
+					<strong><?php echo wp_kses_post( wc_price( $disc_price ) ); ?></strong>
+					<span><?php esc_html_e( '/each', 'wup-upsell-pro' ); ?></span>
+				</div>
 				<?php else : ?>
-					<?php printf( esc_html__( 'Spend %s+', 'wup-upsell-pro' ), wp_kses_post( wc_price( $tier['min'] ) ) ); ?>
+				<div class="wup-bmsm-s3-save"><?php echo esc_html( $tier['discount'] . '% OFF' ); ?></div>
+				<?php endif; ?>
+				<?php else : ?>
+				<div class="wup-bmsm-s3-buy-label">
+					<?php printf(
+						/* translators: %s = price */
+						esc_html__( 'Spend %s+', 'wup-upsell-pro' ),
+						wp_kses_post( wc_price( $tier['min'] ) )
+					); ?>
+				</div>
+				<div class="wup-bmsm-s3-save"><?php echo esc_html( $tier['discount'] . '% OFF' ); ?></div>
 				<?php endif; ?>
 			</div>
 		</div>
 		<?php endforeach; ?>
-	</div>
-
-	<div class="wup-bmsm-progress">
-		<div class="wup-bmsm-progress-track">
-			<div class="wup-bmsm-progress-fill" style="width:<?php echo esc_attr( $progress_pct ); ?>%"></div>
-		</div>
 	</div>
 
 	<?php if ( $active_tier && ! $hide_congrats ) :

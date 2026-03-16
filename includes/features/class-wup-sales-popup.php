@@ -45,8 +45,8 @@ if ( ! class_exists( 'WUP_Sales_Popup' ) ) {
 			}
 
 			$template         = wup_get_option( 'wup_popup_template', 'modern' );
-			$desktop_position = wup_get_option( 'wup_popup_desktop_position', 'bottom_left' );
-			$mobile_position  = wup_get_option( 'wup_popup_mobile_position', 'bottom_center' );
+			$desktop_position = wup_get_option( 'wup_popup_position', 'bottom_left' );
+			$mobile_position  = wup_get_option( 'wup_popup_mobile', 'mobile-bottom_center' );
 
 			include WUP_TEMPLATES_DIR . 'sales-popup/popup.php';
 		}
@@ -88,8 +88,8 @@ if ( ! class_exists( 'WUP_Sales_Popup' ) ) {
 
 		/** Build JS localisation data. */
 		private function get_js_data(): array {
-			$names_raw  = wup_get_option( 'wup_popup_virtual_names', '' );
-			$cities_raw = wup_get_option( 'wup_popup_virtual_cities', '' );
+			$names_raw  = wup_get_option( 'wup_popup_names', '' );
+			$cities_raw = wup_get_option( 'wup_popup_cities', '' );
 
 			$names  = array_filter( array_map( 'trim', explode( "\n", $names_raw ) ) );
 			$cities = array_filter( array_map( 'trim', explode( "\n", $cities_raw ) ) );
@@ -108,11 +108,11 @@ if ( ! class_exists( 'WUP_Sales_Popup' ) ) {
 
 		/** Resolve product list based on source setting. */
 		private function get_products(): array {
-			$source_type = wup_get_option( 'wup_popup_product_source', 'smart_random' );
+			$source_type = wup_get_option( 'wup_popup_source', 'smart_random' );
 			$args        = [ 'status' => 'publish', 'limit' => 20 ];
 
 			if ( $source_type === 'smart_selected' ) {
-				$ids_raw = wup_get_option( 'wup_popup_selected_products', '' );
+				$ids_raw = wup_get_option( 'wup_popup_products', '' );
 				if ( ! empty( $ids_raw ) ) {
 					$args['include'] = array_map( 'intval', explode( ',', $ids_raw ) );
 					$args['limit']   = -1;

@@ -80,7 +80,12 @@ trait WUP_Bundle_Ajax {
 
 	/** AJAX: add selected bundle items to cart and optionally apply discount. */
 	public function ajax_add_bundle(): void {
-		check_ajax_referer( 'wup-add-bundle', 'nonce' );
+		// Accept both 'wup-add-bundle' (bundle JS) and 'wup-popup' (popup add-btn JS).
+		$nonce = sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ?? '' ) );
+		if ( ! wp_verify_nonce( $nonce, 'wup-add-bundle' ) && ! wp_verify_nonce( $nonce, 'wup-popup' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Security check failed.', 'woo-upsell-pro' ) ], 403 );
+			return;
+		}
 
 		$raw   = isset( $_POST['items'] ) ? wp_unslash( $_POST['items'] ) : '[]'; // phpcs:ignore WordPress.Security.NonceVerification
 		$items = json_decode( $raw, true );

@@ -120,9 +120,13 @@ if ( ! class_exists( 'WUP_Popup' ) ) {
 		// Assets
 		// ------------------------------------------------------------------ //
 
-		/** Enqueue popup JS and pass localised config. */
+		/** Enqueue popup JS and pass localised config. Only loads when popup is enabled. */
 		public function enqueue_assets(): void {
 			if ( is_admin() ) {
+				return;
+			}
+
+			if ( wup_get_option( 'wup_upsell_popup_enable', 'no' ) !== 'yes' ) {
 				return;
 			}
 

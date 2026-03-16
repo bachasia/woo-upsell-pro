@@ -88,18 +88,11 @@ if ( ! class_exists( 'WUP_Bundle' ) ) {
 				return;
 			}
 
-			$js_path = WUP_PUBLIC_DIR . 'js/build/popup.js';
-			$js_ver  = file_exists( $js_path ) ? filemtime( $js_path ) : WUP_VERSION;
+			// Use the pre-registered 'wup-popup' handle (same file) to avoid
+			// loading the script twice when both Bundle and Popup are active.
+			wp_enqueue_script( 'wup-popup' );
 
-			wp_enqueue_script(
-				'wup-bundle-js',
-				WUP_URL . 'public/js/build/popup.js',
-				[ 'jquery' ],
-				$js_ver,
-				true
-			);
-
-			wp_localize_script( 'wup-bundle-js', 'wupData', [
+			wp_localize_script( 'wup-popup', 'wupData', [
 				'ajax_url'        => admin_url( 'admin-ajax.php' ),
 				'nonce'           => wp_create_nonce( 'wup-add-bundle' ),
 				'quickview_nonce' => wp_create_nonce( 'wup-quickview' ),
