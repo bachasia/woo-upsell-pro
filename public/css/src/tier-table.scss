@@ -1,82 +1,129 @@
-.wup-tier-table {
-	margin: 12px 0;
-	border: 1px solid rgba(0, 0, 0, 0.08);
-	border-radius: var(--wup-border-radius, 8px);
-	background: var(--wup-bg, #fff);
-	overflow: hidden;
+/* === WUP Bundle Styles === */
+.wup-fbt-bundle {
+    margin: 20px 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
 
-	&__heading {
-		margin: 0;
-		padding: 12px 14px;
-		font-size: 14px;
-		font-weight: 600;
-		color: var(--wup-text, #3d3d3d);
-		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-	}
+    h2 { font-size: 1.2em; margin-bottom: 15px; }
 
-	&__table {
-		width: 100%;
-		border-collapse: collapse;
+    .wup-bundle-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-start;
+    }
 
-		th,
-		td {
-			padding: 10px 12px;
-			text-align: left;
-			font-size: 13px;
-			border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-		}
+    .wup-bundle-item {
+        position: relative;
+        text-align: center;
+        opacity: 1;
+        transition: opacity .2s;
+        &.wup-item-deselected { opacity: 0.4; }
+    }
 
-	}
+    .wup-bundle-separator {
+        display: flex;
+        align-items: center;
+        font-size: 1.5em;
+        color: #ccc;
+        padding: 20px 5px;
+    }
 
-	&__row--active {
-		background: rgba(127, 84, 179, 0.08);
-		font-weight: 600;
+    .wup-bundle-footer {
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-		td:first-child {
-			border-left: 3px solid var(--wup-accent, #7f54b3);
-			padding-left: 9px;
-		}
-	}
+    .wup-bundle-total { font-weight: bold; font-size: 1.1em; }
 
-	&__table tbody tr:last-child td {
-		border-bottom: 0;
-	}
+    .wup-bundle-discount {
+        color: #e44;
+        font-size: 0.9em;
+    }
 
-	&__status--active {
-		color: var(--wup-accent, #7f54b3);
-	}
+    .wup-item-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+    }
 
-	&__status--locked {
-		color: #777;
-	}
+    .wup-item-title { font-size: 0.9em; }
+    .wup-item-price { font-weight: bold; font-size: 0.95em; }
+
+    .wup-variant-select {
+        margin-top: 5px;
+        font-size: 0.85em;
+        max-width: 140px;
+    }
+
+    // Layout 2 grid cards
+    &.wup-bundle-layout-2 .wup-bundle-item {
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 10px;
+        min-width: 120px;
+
+        .wup-item-label { flex-direction: row; align-items: flex-start; }
+        .wup-item-image img { max-width: 100px; height: auto; }
+    }
+
+    // Layout 3 compact list
+    &.wup-bundle-layout-3 .wup-bundle-items {
+        flex-direction: column;
+        gap: 8px;
+
+        .wup-bundle-item { text-align: left; }
+        .wup-item-label { flex-direction: row; gap: 8px; align-items: center; }
+    }
+
+    // Layout 4 deal display
+    &.wup-bundle-layout-4 {
+        .wup-deal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .wup-deal-badge {
+            background: #e44;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .wup-deal-pricing {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+        }
+
+        .wup-deal-original-price {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .wup-deal-discounted-price {
+            font-weight: bold;
+            color: #e44;
+            font-size: 1.2em;
+        }
+
+        .wup-deal-cta {
+            font-size: 1.1em;
+            padding: 12px 24px;
+        }
+    }
 }
 
-@media (max-width: 480px) {
-
-	.wup-tier-table {
-
-		&__table,
-		thead,
-		tbody,
-		tr,
-		th,
-		td {
-			display: block;
-			width: 100%;
-		}
-
-		thead {
-			display: none;
-		}
-
-		&__row {
-			padding: 8px 10px;
-			border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-		}
-
-		&__row td {
-			border: 0;
-			padding: 4px 0;
-		}
-	}
-}
+/* === WUP Tier Table Styles — implemented in Phase 05 === */
