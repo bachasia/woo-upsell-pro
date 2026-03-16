@@ -102,3 +102,63 @@
     });
 
 })(jQuery);
+
+// === WUP Popup ===
+(function($) {
+    'use strict';
+
+    // Open popup after add-to-cart
+    $(document.body).on('added_to_cart', function(e, fragments, cart_hash, $button) {
+        const productId = $button
+            ? ($button.data('product_id') || $button.closest('[data-product_id]').data('product_id'))
+            : 0;
+        if (!productId || !window.wupPopup) return;
+
+        $.post(wupPopup.ajax_url, {
+            action: 'wup_get_popup',
+            nonce: wupPopup.nonce,
+            product_id: productId
+        }, function(res) {
+            if (res.success) {
+                $('#wup-popup-modal .wup-popup-inner').html(res.data.html);
+                $('#wup-popup-modal').fadeIn(200);
+                $('body').addClass('wup-popup-open');
+            }
+        });
+    });
+
+    // Close popup on overlay or close button click
+    $(document).on('click', '#wup-popup-modal .wup-popup-close, #wup-popup-modal .wup-popup-overlay', function() {
+        $('#wup-popup-modal').fadeOut(200);
+        $('body').removeClass('wup-popup-open');
+    });
+
+    // Add individual item from popup to cart
+    $(document).on('click', '.wup-popup-add-btn', function() {
+        const $btn = $(this);
+        const $item = $btn.closest('.wup-popup-item');
+        const productId = $btn.data('product-id');
+        const variationId = $item.data('variation-id') || 0;
+        const addLabel = (window.wupPopup && wupPopup.add_label) ? wupPopup.add_label : 'Add To Cart';
+
+        $btn.prop('disabled', true);
+
+        $.post(wupPopup.ajax_url, {
+            action: 'wup_add_bundle',
+            nonce: wupPopup.nonce,
+            items: JSON.stringify([{ product_id: productId, variation_id: variationId, quantity: 1 }])
+        }, function(res) {
+            $btn.prop('disabled', false);
+            if (res.success) {
+                $(document.body).trigger('wc_fragment_refresh');
+                $btn.text('\u2713').css('background', '#4caf50');
+                setTimeout(function() {
+                    $btn.text(addLabel).css('background', '');
+                }, 1500);
+            }
+        }).fail(function() {
+            $btn.prop('disabled', false);
+        });
+    });
+
+})(jQuery);
