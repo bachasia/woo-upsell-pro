@@ -69,6 +69,7 @@ Plugin inherits WooCommerce theme colors by default. Override variables availabl
 - **Layout:** WooCommerce-style settings page (extends WC_Settings_Page)
 - **Panels:** Sidebar list (campaigns) + main editor (React)
 - **Inputs:** @wordpress/components (TextControl, SelectControl, ToggleControl, RangeControl)
+- **Delete UX:** Two-step in-UI confirmation state (Delete → Confirm delete/Cancel), no browser `window.confirm`
 - **Typography:** System font stack (WP admin default)
 - **Colors:** WP admin color scheme (#2271b1 blue, #d63638 red)
 

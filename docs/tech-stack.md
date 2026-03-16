@@ -13,7 +13,7 @@
 | Storage (tracking) | Order meta (`_wup_*`) | Per-order upsell attribution |
 | API (admin) | WP REST API (`/wp/v2/`) + custom routes | Modern, structured, no admin-ajax |
 | Cart operations | WC Store API (`/wc/store/v1/`) | HPOS-compatible, modern |
-| Email | WC email hooks + `wp_mail()` | Native, no 3rd-party dependency |
+| Email | WC email hooks + WooCommerce email classes | Native flow, no 3rd-party dependency |
 | Discount engine | `woocommerce_cart_calculate_fees` + `woocommerce_product_get_price` | WC-native hooks |
 
 ## Frontend (JavaScript)
@@ -21,7 +21,11 @@
 |------|--------|-----------|
 | Admin dashboard | React + `@wordpress/components` | Consistent with block editor |
 | Frontend widgets | Vanilla JS (ES6+) | Lightweight, no jQuery dep |
+<<<<<<< HEAD
 | Build tool | `@wordpress/scripts` (webpack) | WP-standard, zero config |
+=======
+| Build tool | `@wordpress/scripts` (webpack, customized) | WP-standard build with plugin output preserved (`output.clean = false`) |
+>>>>>>> 06e6ab0 (feat: bootstrap Woo Upsell Pro plugin codebase)
 | CSS | SCSS → compiled | Admin: WP design tokens; Frontend: scoped |
 | AJAX (cart) | WC Store API fetch | Modern, HPOS-compatible |
 
