@@ -51,6 +51,31 @@ if ( ! class_exists( 'WUP_Plugin' ) ) {
 			WUP_Popup::get_instance();
 			WUP_Side_Cart::get_instance();
 
+			// Phase 04 — Cart Upsell + Thank-you Upsell + Related Products.
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-renderer.php';
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-cart-upsell.php';
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-thankyou-upsell.php';
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-related.php';
+			WUP_Cart_Upsell::get_instance();
+			WUP_Thankyou_Upsell::get_instance();
+			WUP_Related::get_instance();
+
+			// Phase 05 — Buy More Save More.
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-buy-more-save-more.php';
+			WUP_BuyMoreSaveMore::get_instance();
+
+			// Phase 06 — Announcement Bars + Sales Popups.
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-announcement.php';
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-sales-popup.php';
+			WUP_Announcement::get_instance();
+			WUP_Sales_Popup::get_instance();
+
+			// Phase 07 — Email Coupon + FOMO Stock Counter.
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-email-coupon.php';
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-fomo-stock.php';
+			WUP_Email_Coupon::get_instance();
+			WUP_Fomo_Stock::get_instance();
+
 			// Boot admin subsystem.
 			if ( is_admin() ) {
 				WUP_Admin::get_instance();
