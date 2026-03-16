@@ -4,8 +4,8 @@
   "description": "Woo Upsell Pro — upsell & cross-sell features for WooCommerce",
   "private": true,
   "scripts": {
-    "build": "wp-scripts build --webpack-config webpack.config.js",
-    "start": "wp-scripts start --webpack-config webpack.config.js",
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack --config webpack.config.js --watch",
     "lint:js": "wp-scripts lint-js admin/src public/js/src"
   },
   "devDependencies": {
