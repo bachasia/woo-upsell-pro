@@ -1,6 +1,6 @@
 # Phase 03 — Post-ATC Lightbox Popup + Slide Side Cart
 
-**Status:** Todo | **Priority:** P0 | **Effort:** XL
+**Status:** Complete | **Priority:** P0 | **Effort:** XL
 **Depends on:** Phase 01, Phase 02 (AJAX fragments contract)
 
 ---
@@ -173,23 +173,23 @@ JS listens to `wc_fragments_refreshed` to update badge and re-render if cart is 
 ## Todo
 
 ### Popup
-- [ ] `includes/features/class-wup-popup.php`
-- [ ] `templates/popup/lightbox.php`
-- [ ] `public/js/src/popup.js` popup interactions
-- [ ] `public/css/src/popup.scss`
-- [ ] AJAX `wup_get_popup` with nonce
+- [x] `includes/features/class-wup-popup.php`
+- [x] `templates/popup/lightbox.php`
+- [x] `public/js/src/popup.js` popup interactions
+- [x] `public/css/src/popup.scss`
+- [x] AJAX `wup_get_popup` with nonce
 
 ### Side Cart
-- [ ] `includes/features/class-wup-side-cart.php`
-- [ ] `templates/side-cart/header.php`
-- [ ] `templates/side-cart/items.php`
-- [ ] `templates/side-cart/shipping-bar.php`
-- [ ] `templates/side-cart/fbt.php`
-- [ ] `templates/side-cart/coupon.php`
-- [ ] `templates/side-cart/footer.php`
-- [ ] `public/js/src/sidecart.js`
-- [ ] `public/css/src/sidecart.scss`
-- [ ] All 6 AJAX endpoints (nonce-protected)
-- [ ] `woocommerce_add_to_cart_fragments` filter
-- [ ] Floating cart icon with badge
-- [ ] Free shipping progress bar calculation
+- [x] `includes/features/class-wup-side-cart.php`
+- [x] `templates/side-cart/header.php`
+- [x] `templates/side-cart/items.php`
+- [x] `templates/side-cart/shipping-bar.php`
+- [x] `templates/side-cart/fbt.php`
+- [x] `templates/side-cart/coupon.php`
+- [x] `templates/side-cart/footer.php`
+- [x] `public/js/src/sidecart.js`
+- [x] `public/css/src/sidecart.scss`
+- [x] All 6 AJAX endpoints (nonce-protected)
+- [x] `woocommerce_add_to_cart_fragments` filter
+- [x] Floating cart icon with badge
+- [x] Free shipping progress bar calculation
