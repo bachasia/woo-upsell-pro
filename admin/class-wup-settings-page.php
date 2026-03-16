@@ -136,80 +136,116 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 			wp_send_json_success( __( 'Cache cleared.', 'woo-upsell-pro' ) );
 		}
 
-		/** Render the full tabbed settings page. */
+		/** Tab icons (Dashicons classes). */
+		private array $tab_icons = [
+			'wup-bundle'       => 'dashicons-products',
+			'wup-popup'        => 'dashicons-welcome-widgets-menus',
+			'wup-sidecart'     => 'dashicons-cart',
+			'wup-bmsm'         => 'dashicons-tag',
+			'wup-cart'         => 'dashicons-yes-alt',
+			'wup-coupon'       => 'dashicons-tickets-alt',
+			'wup-announcement' => 'dashicons-megaphone',
+			'wup-sales-popup'  => 'dashicons-bell',
+			'wup-advanced'     => 'dashicons-admin-settings',
+		];
+
+		/** Render the full settings page with sidebar layout. */
 		public function render(): void {
 			$active_tab = sanitize_key( $_GET['tab'] ?? array_key_first( $this->tabs ) );
 			if ( ! array_key_exists( $active_tab, $this->tabs ) ) {
 				$active_tab = array_key_first( $this->tabs );
 			}
 
-			$schema = $this->get_schema();
-			$fields = array_filter( $schema, fn( $f ) => ( $f['tab'] ?? '' ) === $active_tab );
-
-			settings_errors( 'wup_messages' );
+			$fields = array_filter( $this->get_schema(), fn( $f ) => ( $f['tab'] ?? '' ) === $active_tab );
+			$saved  = isset( $_GET['settings-updated'] );
 			?>
 			<div class="wrap wup-settings-wrap">
-				<h1><?php esc_html_e( 'Woo Upsell Pro', 'woo-upsell-pro' ); ?></h1>
 
-				<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
-					<?php foreach ( $this->tabs as $slug => $label ) : ?>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wup-settings&tab=' . $slug ) ); ?>"
-						   class="nav-tab<?php echo $slug === $active_tab ? ' nav-tab-active' : ''; ?>">
-							<?php echo esc_html( $label ); ?>
-						</a>
-					<?php endforeach; ?>
-				</nav>
-
-				<form method="post" action="">
-					<?php wp_nonce_field( 'wup_save_settings', 'wup_nonce' ); ?>
-					<input type="hidden" name="wup_save_settings" value="1">
-
-					<table class="form-table" role="presentation">
-						<?php foreach ( $fields as $field ) : ?>
-							<tr>
-								<th scope="row">
-									<label for="<?php echo esc_attr( $field['id'] ); ?>">
-										<?php echo esc_html( $field['name'] ); ?>
-									</label>
-								</th>
-								<td>
-									<?php $this->render_field( $field ); ?>
-									<?php if ( ! empty( $field['desc'] ) ) : ?>
-										<p class="description"><?php echo esc_html( $field['desc'] ); ?></p>
-									<?php endif; ?>
-								</td>
-							</tr>
+				<!-- Sidebar navigation -->
+				<aside class="wup-sidebar">
+					<div class="wup-sidebar-brand">
+						<strong>Woo Upsell Pro</strong>
+						<span>Settings</span>
+					</div>
+					<nav>
+						<?php foreach ( $this->tabs as $slug => $label ) : ?>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wup-settings&tab=' . $slug ) ); ?>"
+							   class="<?php echo $slug === $active_tab ? 'active' : ''; ?>">
+								<span class="wup-nav-icon dashicons <?php echo esc_attr( $this->tab_icons[ $slug ] ?? 'dashicons-admin-generic' ); ?>"></span>
+								<?php echo esc_html( $label ); ?>
+							</a>
 						<?php endforeach; ?>
-					</table>
+					</nav>
+				</aside>
 
-					<?php if ( $active_tab === 'wup-advanced' ) : ?>
-						<hr>
-						<p>
-							<button type="button" id="wup-flush-cache" class="button">
-								<?php esc_html_e( 'Flush Cache', 'woo-upsell-pro' ); ?>
-							</button>
-							<span id="wup-flush-result" style="margin-left:8px;"></span>
-						</p>
-						<script>
-						document.getElementById('wup-flush-cache').addEventListener('click', function() {
-							var el = document.getElementById('wup-flush-result');
-							el.textContent = '...';
-							fetch(ajaxurl, {
-								method: 'POST',
-								headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-								body: new URLSearchParams({
-									action: 'wup_flush_cache',
-									nonce: '<?php echo esc_js( wp_create_nonce( 'wup_admin_nonce' ) ); ?>'
-								})
-							}).then(r => r.json()).then(d => {
-								el.textContent = d.success ? d.data : d.data;
-							});
-						});
-						</script>
+				<!-- Content area -->
+				<div class="wup-content">
+
+					<?php if ( $saved ) : ?>
+						<div class="notice notice-success is-dismissible" style="border-radius:7px;">
+							<p><?php esc_html_e( 'Settings saved.', 'woo-upsell-pro' ); ?></p>
+						</div>
 					<?php endif; ?>
 
-					<?php submit_button( __( 'Save Settings', 'woo-upsell-pro' ) ); ?>
-				</form>
+					<div class="wup-content-header">
+						<h2><?php echo esc_html( $this->tabs[ $active_tab ] ); ?></h2>
+					</div>
+
+					<form method="post" action="">
+						<?php wp_nonce_field( 'wup_save_settings', 'wup_nonce' ); ?>
+						<input type="hidden" name="wup_save_settings" value="1">
+
+						<!-- Fields card -->
+						<div class="wup-card">
+							<div class="wup-card-title"><?php echo esc_html( $this->tabs[ $active_tab ] ); ?> Options</div>
+							<?php foreach ( $fields as $field ) : ?>
+								<div class="wup-field">
+									<div class="wup-field-label">
+										<label for="<?php echo esc_attr( $field['id'] ); ?>"><?php echo esc_html( $field['name'] ); ?></label>
+										<?php if ( ! empty( $field['desc'] ) ) : ?>
+											<div class="wup-field-desc"><?php echo esc_html( $field['desc'] ); ?></div>
+										<?php endif; ?>
+									</div>
+									<div class="wup-field-input">
+										<?php $this->render_field( $field ); ?>
+									</div>
+								</div>
+							<?php endforeach; ?>
+						</div>
+
+						<?php if ( $active_tab === 'wup-advanced' ) : ?>
+							<div class="wup-card">
+								<div class="wup-card-title">Cache</div>
+								<div class="wup-field">
+									<div class="wup-field-label">
+										<?php esc_html_e( 'Flush Transient Cache', 'woo-upsell-pro' ); ?>
+										<div class="wup-field-desc"><?php esc_html_e( 'Clear all cached product queries.', 'woo-upsell-pro' ); ?></div>
+									</div>
+									<div class="wup-field-input">
+										<button type="button" id="wup-flush-cache" class="wup-btn-secondary">
+											<?php esc_html_e( 'Flush Cache', 'woo-upsell-pro' ); ?>
+										</button>
+										<span id="wup-flush-result" style="font-size:12px;color:#10b981;margin-top:4px;"></span>
+									</div>
+								</div>
+							</div>
+							<script>
+							document.getElementById('wup-flush-cache').addEventListener('click',function(){
+								var el=document.getElementById('wup-flush-result');
+								el.textContent='...';
+								fetch(ajaxurl,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+								body:new URLSearchParams({action:'wup_flush_cache',nonce:'<?php echo esc_js( wp_create_nonce( 'wup_admin_nonce' ) ); ?>'})
+								}).then(r=>r.json()).then(d=>{el.textContent=d.success?d.data:'Error';});
+							});
+							</script>
+						<?php endif; ?>
+
+						<!-- Actions bar -->
+						<div class="wup-actions">
+							<button type="submit" class="wup-btn-save"><?php esc_html_e( 'Save Settings', 'woo-upsell-pro' ); ?></button>
+						</div>
+					</form>
+				</div>
 			</div>
 			<?php
 		}
@@ -221,15 +257,19 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 
 			switch ( $field['type'] ) {
 				case 'checkbox':
+					echo '<label class="wup-toggle">';
 					echo '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes"' . checked( $value, 'yes', false ) . '>';
+					echo '<span class="wup-toggle-track"></span>';
+					echo '<span class="wup-toggle-label">' . esc_html__( 'Enabled', 'woo-upsell-pro' ) . '</span>';
+					echo '</label>';
 					break;
 
 				case 'textarea':
-					echo '<textarea id="' . $id . '" name="' . $id . '" rows="4" cols="60">' . esc_textarea( (string) $value ) . '</textarea>';
+					echo '<textarea id="' . $id . '" name="' . $id . '" rows="4">' . esc_textarea( (string) $value ) . '</textarea>';
 					break;
 
 				case 'number':
-					echo '<input type="number" id="' . $id . '" name="' . $id . '" value="' . esc_attr( (string) $value ) . '" class="small-text">';
+					echo '<input type="number" id="' . $id . '" name="' . $id . '" value="' . esc_attr( (string) $value ) . '">';
 					break;
 
 				case 'color':
@@ -245,7 +285,7 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 					break;
 
 				default:
-					echo '<input type="text" id="' . $id . '" name="' . $id . '" value="' . esc_attr( (string) $value ) . '" class="regular-text">';
+					echo '<input type="text" id="' . $id . '" name="' . $id . '" value="' . esc_attr( (string) $value ) . '">';
 			}
 		}
 	}

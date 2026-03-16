@@ -159,17 +159,17 @@ if ( ! class_exists( 'WUP_Assets' ) ) {
 		// Admin assets
 		// -------------------------------------------------------------------------
 
-		/** Enqueue admin stylesheet on all WP admin pages. */
+		/** Enqueue admin stylesheet on plugin settings page only. */
 		public function enqueue_admin_assets( string $hook ): void {
-			// Scoped to plugin admin pages only.
-			if ( strpos( $hook, 'wup-' ) === false ) {
+			if ( 'toplevel_page_wup-settings' !== $hook ) {
 				return;
 			}
 
+			wp_enqueue_style( 'dashicons' );
 			wp_enqueue_style(
 				'wup-admin-styles',
 				WUP_URL . 'admin/css/wup-admin.css',
-				[],
+				[ 'dashicons' ],
 				WUP_VERSION
 			);
 		}
