@@ -45,6 +45,12 @@ if ( ! class_exists( 'WUP_Plugin' ) ) {
 			WUP_Bundle::get_instance();
 			WUP_Product_Fields::get_instance();
 
+			// Phase 03 — Popup + Side Cart.
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-popup.php';
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-side-cart.php';
+			WUP_Popup::get_instance();
+			WUP_Side_Cart::get_instance();
+
 			// Boot admin subsystem.
 			if ( is_admin() ) {
 				WUP_Admin::get_instance();
