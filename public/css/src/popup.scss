@@ -1,1 +1,113 @@
-/* popup styles — implemented in Phase 03 */
+/* WUP Post-ATC Lightbox Popup */
+
+#wup-popup-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    .wup-popup-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .wup-popup-inner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        border-radius: 8px;
+        padding: 24px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        z-index: 1;
+    }
+
+    .wup-popup-close {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        line-height: 1;
+        color: #333;
+
+        &:hover { color: #000; }
+    }
+
+    .wup-popup-header {
+        margin-bottom: 16px;
+        padding-right: 32px;
+
+        h3 {
+            margin: 0;
+            font-size: 1.1em;
+        }
+    }
+
+    .wup-popup-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 16px 0;
+    }
+
+    .wup-popup-item {
+        flex: 0 0 calc(33.333% - 8px);
+        text-align: center;
+
+        img {
+            max-width: 100%;
+            border-radius: 4px;
+        }
+    }
+
+    .wup-popup-item-title {
+        font-size: 0.875em;
+        margin: 6px 0 4px;
+        font-weight: 600;
+    }
+
+    .wup-popup-item-price {
+        font-size: 0.875em;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .wup-popup-add-btn {
+        margin-top: 8px;
+        width: 100%;
+        transition: background 0.2s;
+    }
+
+    .wup-popup-footer {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #eee;
+
+        .button {
+            flex: 1;
+            text-align: center;
+        }
+    }
+}
+
+body.wup-popup-open {
+    overflow: hidden;
+}
+
+/* Responsive: 2-col on small screens */
+@media (max-width: 480px) {
+    #wup-popup-modal {
+        .wup-popup-item {
+            flex: 0 0 calc(50% - 6px);
+        }
+    }
+}
