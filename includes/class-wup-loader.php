@@ -26,6 +26,14 @@ if ( ! class_exists( 'WUP_Loader' ) ) {
 
 		private function __construct() {
 			add_action( 'plugins_loaded', [ $this, 'load_plugin' ], 99 );
+			add_action( 'before_woocommerce_init', [ $this, 'declare_hpos_compat' ] );
+		}
+
+		/** Declare HPOS (High-Performance Order Storage) compatibility. */
+		public function declare_hpos_compat(): void {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', WUP_FILE, true );
+			}
 		}
 
 		/**
