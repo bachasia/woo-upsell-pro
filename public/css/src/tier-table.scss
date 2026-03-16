@@ -126,4 +126,105 @@
     }
 }
 
-/* === WUP Tier Table Styles — implemented in Phase 05 === */
+/* === WUP Tier Table Styles === */
+
+.wup-bmsm {
+    margin: 20px 0;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+.wup-bmsm-header {
+    margin-bottom: 12px;
+
+    .wup-bmsm-heading {
+        margin: 0 0 4px;
+        font-size: 1.1em;
+        font-weight: 700;
+    }
+
+    .wup-bmsm-subtitle {
+        margin: 0;
+        color: #666;
+        font-size: 0.9em;
+    }
+}
+
+/* Default layout — table */
+.wup-bmsm-default {
+    .wup-bmsm-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+
+        th, td {
+            padding: 8px 10px;
+            border: 1px solid #e5e5e5;
+            text-align: left;
+        }
+
+        th { background: #f7f7f7; font-weight: 600; }
+    }
+
+    .wup-bmsm-tier-active td {
+        background: #fff8e1;
+        border-color: #f5c518;
+        font-weight: 600;
+    }
+
+    .wup-bmsm-add-btn {
+        font-size: 0.8em;
+        padding: 4px 10px;
+        cursor: pointer;
+    }
+}
+
+/* Style4 layout — discount cards */
+.wup-bmsm-style4 {
+    .wup-bmsm-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .wup-bmsm-card {
+        flex: 1 1 80px;
+        min-width: 70px;
+        border: 2px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 10px 8px;
+        text-align: center;
+        transition: border-color .2s, background .2s;
+
+        &.wup-bmsm-tier-active {
+            border-color: #f5c518;
+            background: #fff8e1;
+        }
+    }
+
+    .wup-bmsm-badge {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #e44;
+        line-height: 1;
+    }
+
+    .wup-bmsm-card-label { font-size: 0.8em; margin-top: 4px; color: #555; }
+    .wup-bmsm-card-off   { font-size: 0.75em; color: #e44; font-weight: 600; text-transform: uppercase; }
+}
+
+/* Notice messages */
+.wup-bmsm-notice {
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 0.875em;
+    line-height: 1.5;
+
+    &.wup-bmsm-congrats { background: #e8f5e9; border-left: 3px solid #4caf50; }
+    &.wup-bmsm-remain   { background: #fff3e0; border-left: 3px solid #f5c518; }
+}
