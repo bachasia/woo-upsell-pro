@@ -1,50 +1,36 @@
 <?php
+/**
+ * WUP_Activator — Handles plugin activation and deactivation.
+ *
+ * Activation: records install timestamp and plugin version.
+ * Deactivation: no-op (data preserved for re-activation).
+ */
 
-namespace WooUpsellPro;
-
-use WooUpsellPro\Campaigns\WUP_Campaign_CPT;
-
-if (! defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-class WUP_Activator {
-    private const DEFAULT_SETTINGS = [
-        'enable_popup' => true,
-        'enable_cart_upsell' => true,
-        'enable_bmsm' => true,
-        'enable_email_coupon' => true,
-        'popup_auto_dismiss' => 5,
-        'popup_heading' => 'Customers also bought',
-        'cart_upsell_heading' => 'You might also like',
-        'cart_upsell_max_products' => 3,
-        'bmsm_tiers' => [
-            ['qty' => 2, 'discount' => 5, 'type' => 'percent'],
-            ['qty' => 5, 'discount' => 10, 'type' => 'percent'],
-            ['qty' => 10, 'discount' => 20, 'type' => 'percent'],
-        ],
-        'email_coupon' => [
-            'enabled' => true,
-            'discount_type' => 'percent',
-            'discount_amount' => 10,
-            'expiry_days' => 30,
-            'min_order_amount' => 0,
-            'email_heading' => 'Thank you! Here\'s a gift.',
-        ],
-    ];
+if ( ! class_exists( 'WUP_Activator' ) ) {
 
-    public static function activate(): void {
-        $cpt = new WUP_Campaign_CPT();
-        $cpt->register();
+	class WUP_Activator {
 
-        $existing = get_option('wup_settings', []);
+		/** Register WP activation/deactivation hooks. Must be called before any output. */
+		public static function register_hooks(): void {
+			register_activation_hook( WUP_FILE, [ __CLASS__, 'activate' ] );
+			register_deactivation_hook( WUP_FILE, [ __CLASS__, 'deactivate' ] );
+		}
 
-        if (! is_array($existing)) {
-            $existing = [];
-        }
+		/** Runs on plugin activation. */
+		public static function activate(): void {
+			if ( ! get_option( 'wup_activated_time' ) ) {
+				update_option( 'wup_activated_time', time(), false );
+			}
+			update_option( 'wup_version', WUP_VERSION, false );
+		}
 
-        update_option('wup_settings', array_replace_recursive(self::DEFAULT_SETTINGS, $existing), false);
-
-        flush_rewrite_rules();
-    }
+		/** Runs on plugin deactivation — intentionally empty. */
+		public static function deactivate(): void {
+			// Nothing to do on deactivation; data is preserved.
+		}
+	}
 }

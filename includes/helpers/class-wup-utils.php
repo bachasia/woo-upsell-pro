@@ -1,63 +1,92 @@
 <?php
+/**
+ * WUP utility helper functions (procedural).
+ *
+ * Thin wrappers around WP/WC core functions used across the plugin.
+ * No class needed — functions are namespaced by the wup_ prefix.
+ */
 
-namespace WooUpsellPro\Helpers;
-
-if (! defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-class WUP_Utils {
-    private const FEATURE_MAP = [
-        'popup' => 'enable_popup',
-        'cart_upsell' => 'enable_cart_upsell',
-        'bmsm' => 'enable_bmsm',
-        'buy_more_save_more' => 'enable_bmsm',
-        'email_coupon' => 'enable_email_coupon',
-    ];
+/**
+ * Return term IDs for all product categories assigned to a product.
+ *
+ * @param int $product_id WC product post ID.
+ * @return int[]
+ */
+function wup_get_product_category_ids( int $product_id ): array {
+	$terms = get_the_terms( $product_id, 'product_cat' );
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return [];
+	}
+	return wp_list_pluck( $terms, 'term_id' );
+}
 
-    public static function get_setting(string $key, mixed $default = null): mixed {
-        $settings = get_option('wup_settings', []);
+/**
+ * Return slugs for all product categories assigned to a product.
+ *
+ * @param int $product_id WC product post ID.
+ * @return string[]
+ */
+function wup_get_product_category_slugs( int $product_id ): array {
+	$terms = get_the_terms( $product_id, 'product_cat' );
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return [];
+	}
+	return wp_list_pluck( $terms, 'slug' );
+}
 
-        if (is_array($settings) && array_key_exists($key, $settings)) {
-            return $settings[$key];
-        }
+/**
+ * Return slugs for all product tags assigned to a product.
+ *
+ * @param int $product_id WC product post ID.
+ * @return string[]
+ */
+function wup_get_product_tag_slugs( int $product_id ): array {
+	$terms = get_the_terms( $product_id, 'product_tag' );
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return [];
+	}
+	return wp_list_pluck( $terms, 'slug' );
+}
 
-        $option_key = str_starts_with($key, 'wup_') ? $key : 'wup_' . $key;
-        $option_value = get_option($option_key, null);
+/**
+ * Count the number of form input elements in an HTML string.
+ * Counts <input>, <select>, and <textarea> tags.
+ *
+ * @param string $html Raw HTML string.
+ * @return int
+ */
+function wup_count_form_inputs( string $html ): int {
+	if ( empty( $html ) ) {
+		return 0;
+	}
+	$count = preg_match_all( '/<(input|select|textarea)[\s>]/i', $html, $matches );
+	return $count === false ? 0 : $count;
+}
 
-        if ($option_value !== null) {
-            return $option_value;
-        }
+/**
+ * Retrieve a plugin option value with a fallback default.
+ *
+ * @param string $key     Option key (without wup_ prefix — callers pass full key).
+ * @param mixed  $default Fallback value when option is not set.
+ * @return mixed
+ */
+function wup_get_option( string $key, mixed $default = '' ): mixed {
+	return get_option( $key, $default );
+}
 
-        return $default;
-    }
-
-    public static function get_nested_setting(string $group, string $key, mixed $default = null): mixed {
-        $settings = get_option('wup_settings', []);
-
-        if (is_array($settings) && isset($settings[$group]) && is_array($settings[$group]) && array_key_exists($key, $settings[$group])) {
-            return $settings[$group][$key];
-        }
-
-        return $default;
-    }
-
-    public static function is_feature_enabled(string $feature): bool {
-        $key = self::FEATURE_MAP[$feature] ?? $feature;
-        $value = self::get_setting($key, true);
-
-        if (is_string($value)) {
-            return in_array(strtolower($value), ['1', 'true', 'yes'], true);
-        }
-
-        return (bool) $value;
-    }
-
-    public static function get_plugin_dir(): string {
-        return WUP_PLUGIN_DIR;
-    }
-
-    public static function get_plugin_url(): string {
-        return WUP_PLUGIN_URL;
-    }
+/**
+ * Format a price using WooCommerce's wc_price() helper.
+ *
+ * @param float $price Raw price amount.
+ * @return string HTML price string (e.g. "<span class="woocommerce-Price-amount">$9.99</span>").
+ */
+function wup_format_price( float $price ): string {
+	if ( ! function_exists( 'wc_price' ) ) {
+		return esc_html( number_format( $price, 2 ) );
+	}
+	return wc_price( $price );
 }

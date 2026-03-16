@@ -1,89 +1,71 @@
 <?php
+/**
+ * WUP_Plugin — Core plugin singleton.
+ *
+ * Coordinates admin, public, and feature subsystems.
+ * Called from WUP_Loader::load_plugin() after WC guard passes.
+ */
 
-namespace WooUpsellPro;
-
-use WooUpsellPro\Campaigns\WUP_Campaign_CPT;
-use WooUpsellPro\Campaigns\WUP_Campaign_Manager;
-use WooUpsellPro\Api\WUP_Rest_Controller;
-use WooUpsellPro\Features\WUP_Buy_More_Save_More;
-use WooUpsellPro\Features\WUP_Popup;
-use WooUpsellPro\Features\WUP_Cart_Upsell;
-use WooUpsellPro\Features\WUP_Email_Coupon;
-use WooUpsellPro\Admin\WUP_Admin;
-
-if (! defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-class WUP_Plugin {
-    private WUP_Loader $loader;
+if ( ! class_exists( 'WUP_Plugin' ) ) {
 
-    public function __construct() {
-        $this->loader = new WUP_Loader();
-        $this->register_core_hooks();
-        $this->register_feature_hooks();
-    }
+	final class WUP_Plugin {
 
-    public function run(): void {
-        $this->loader->run();
-    }
+		/** @var WUP_Plugin|null */
+		private static ?WUP_Plugin $instance = null;
 
-    private function register_core_hooks(): void {
-        $campaign_cpt = new WUP_Campaign_CPT();
-        $this->loader->add_action('init', $campaign_cpt, 'register');
+		public static function get_instance(): self {
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
+			}
+			return self::$instance;
+		}
 
-        if (class_exists('WooUpsellPro\\Api\\WUP_Rest_Controller')) {
-            $campaign_manager = new WUP_Campaign_Manager();
-            $rest_controller = new WUP_Rest_Controller($campaign_manager);
-            $this->loader->add_action('rest_api_init', $rest_controller, 'register_routes');
-        }
+		private function __construct() {}
 
-        if (class_exists('WooUpsellPro\\PublicSite\\WUP_Public')) {
-            $public = new \WooUpsellPro\PublicSite\WUP_Public();
-            $public->register_hooks($this->loader);
-        }
+		/**
+		 * Bootstrap all subsystems.
+		 * Called once by WUP_Loader after all files are required.
+		 */
+		public function init(): void {
+			add_action( 'init', [ $this, 'load_textdomain' ] );
 
-        if (is_admin() && class_exists('WooUpsellPro\\Admin\\WUP_Admin')) {
-            $admin = new WUP_Admin();
-            $admin->register_hooks($this->loader);
-        }
+			// Register activation / deactivation hooks (must be called before output).
+			WUP_Activator::register_hooks();
 
-        if (is_admin() && class_exists('WooUpsellPro\\Admin\\WUP_Settings_Page')) {
-            $this->loader->add_filter(
-                'woocommerce_get_settings_pages',
-                $this,
-                'register_settings_page',
-                20,
-                1
-            );
-        }
-    }
+			// Boot feature subsystems.
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-product-source.php';
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-variation-resolver.php';
+			require_once WUP_INCLUDES_DIR . 'features/class-wup-bundle.php';
+			require_once WUP_ADMIN_DIR . 'class-wup-product-fields.php';
+			WUP_Product_Source::init_hooks();
+			WUP_Bundle::get_instance();
+			WUP_Product_Fields::get_instance();
 
-    public function register_settings_page(array $pages): array {
-        $pages[] = new \WooUpsellPro\Admin\WUP_Settings_Page();
+			// Boot admin subsystem.
+			if ( is_admin() ) {
+				WUP_Admin::get_instance();
+			}
 
-        return $pages;
-    }
+			// Boot public subsystem.
+			WUP_Public::get_instance();
 
-    private function register_feature_hooks(): void {
-        if (class_exists('WooUpsellPro\\Features\\WUP_Buy_More_Save_More')) {
-            $feature = new WUP_Buy_More_Save_More();
-            $feature->register_hooks($this->loader);
-        }
+			// Boot asset manager.
+			WUP_Assets::get_instance();
 
-        if (class_exists('WooUpsellPro\\Features\\WUP_Popup')) {
-            $feature = new WUP_Popup();
-            $feature->register_hooks($this->loader);
-        }
+			do_action( 'wup_loaded' );
+		}
 
-        if (class_exists('WooUpsellPro\\Features\\WUP_Cart_Upsell')) {
-            $feature = new WUP_Cart_Upsell();
-            $feature->register_hooks($this->loader);
-        }
-
-        if (class_exists('WooUpsellPro\\Features\\WUP_Email_Coupon')) {
-            $feature = new WUP_Email_Coupon();
-            $feature->register_hooks($this->loader);
-        }
-    }
+		/** Load plugin text domain for translations. */
+		public function load_textdomain(): void {
+			load_plugin_textdomain(
+				WUP_TEXT_DOMAIN,
+				false,
+				dirname( plugin_basename( WUP_FILE ) ) . '/languages'
+			);
+		}
+	}
 }
