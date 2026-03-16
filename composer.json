@@ -1,27 +1,22 @@
 {
-    "name": "woo-upsell-pro/woo-upsell-pro",
-    "description": "Smart upsell campaigns for WooCommerce",
-    "type": "wordpress-plugin",
-    "license": "GPL-2.0+",
-    "require": {
-        "php": ">=8.0"
+  "name": "woo-upsell-pro/woo-upsell-pro",
+  "description": "Woo Upsell Pro — upsell & cross-sell features for WooCommerce",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "WUP\\": "includes/"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^10.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "WooUpsellPro\\": "includes/",
-            "WooUpsellPro\\Admin\\": "admin/",
-            "WooUpsellPro\\PublicSite\\": "public/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "WooUpsellPro\\Tests\\": "tests/"
-        }
-    },
-    "config": {
-        "optimize-autoloader": true
-    }
+    "files": [
+      "includes/helpers/class-wup-utils.php",
+      "includes/helpers/class-wup-cache.php"
+    ]
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
 }

@@ -1,22 +1,14 @@
 {
   "name": "woo-upsell-pro",
   "version": "1.0.0",
-  "description": "Smart upsell campaigns for WooCommerce",
+  "description": "Woo Upsell Pro — upsell & cross-sell features for WooCommerce",
   "private": true,
   "scripts": {
-    "build": "wp-scripts build",
-    "start": "wp-scripts start",
-    "lint:js": "wp-scripts lint-js",
-    "lint:css": "wp-scripts lint-style"
-  },
-  "dependencies": {
-    "@wordpress/api-fetch": "^6.0.0",
-    "@wordpress/components": "^25.0.0",
-    "@wordpress/element": "^5.0.0",
-    "@wordpress/i18n": "^4.0.0"
+    "build": "wp-scripts build --webpack-config webpack.config.js",
+    "start": "wp-scripts start --webpack-config webpack.config.js",
+    "lint:js": "wp-scripts lint-js admin/src public/js/src"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^27.0.0",
-    "schema-utils": "^4.3.3"
+    "@wordpress/scripts": "^27.0.0"
   }
 }
