@@ -788,166 +788,427 @@ body.wup-sc-body-open {
 /* === WUP Tier Table Styles === */
 .wup-bmsm {
   margin: 20px 0;
-  padding: 16px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 6px;
-  font-size: 0.9em;
+  background: #ffffff;
+  border-radius: 12px;
+  font-size: 1.2em;
 }
 
 .wup-bmsm-header {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 .wup-bmsm-header .wup-bmsm-heading {
   margin: 0 0 4px;
-  font-size: 1.1em;
+  font-size: 1.05em;
   font-weight: 700;
+  color: #1e293b;
 }
 .wup-bmsm-header .wup-bmsm-subtitle {
   margin: 0;
-  color: #666;
-  font-size: 0.9em;
+  color: #64748b;
+  font-size: 0.88em;
 }
 
-/* Default layout — table */
 .wup-bmsm-default .wup-bmsm-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   margin-bottom: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
 }
 .wup-bmsm-default .wup-bmsm-table th, .wup-bmsm-default .wup-bmsm-table td {
-  padding: 8px 10px;
-  border: 1px solid #e5e5e5;
+  padding: 10px 14px;
   text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9em;
+}
+.wup-bmsm-default .wup-bmsm-table tr:last-child td {
+  border-bottom: none;
 }
 .wup-bmsm-default .wup-bmsm-table th {
-  background: #f7f7f7;
+  background: #f8fafc;
   font-weight: 600;
+  color: #64748b;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 .wup-bmsm-default .wup-bmsm-tier-active td {
-  background: #fff8e1;
-  border-color: #f5c518;
+  background: #eef2ff;
+  font-weight: 600;
+  color: #1e293b;
+}
+.wup-bmsm-default .wup-bmsm-best-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  background: #6366f1;
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.75em;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.wup-bmsm-default .wup-bmsm-td-discount strong {
+  color: #6366f1;
+  font-size: 1.05em;
+}
+.wup-bmsm-default .wup-bmsm-off-label {
+  margin-left: 2px;
+  color: #64748b;
+  font-size: 0.85em;
+}
+.wup-bmsm-default .wup-bmsm-unlocked {
+  display: inline-block;
+  margin-left: 6px;
+  color: #10b981;
+  font-size: 0.82em;
   font-weight: 600;
 }
 .wup-bmsm-default .wup-bmsm-add-btn {
   font-size: 0.8em;
-  padding: 4px 10px;
+  padding: 5px 12px;
+  border-radius: 6px;
   cursor: pointer;
+  border: 1px solid #6366f1;
+  background: #eef2ff;
+  color: #6366f1;
+  font-weight: 600;
+  transition: background 0.15s, color 0.15s;
+}
+.wup-bmsm-default .wup-bmsm-add-btn:hover {
+  background: #6366f1;
+  color: #fff;
 }
 
-/* Style4 layout — discount cards */
+.wup-bmsm-style2 .wup-bmsm-s2-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  transition: border-color 0.15s, background 0.15s;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-row.wup-bmsm-tier-active {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #6366f1;
+  color: #fff;
+  text-align: center;
+  flex-shrink: 0;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-pct {
+  font-size: 1.2em;
+  font-weight: 700;
+  line-height: 1;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-off {
+  font-size: 0.65em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-buy {
+  color: #1e293b;
+  font-size: 0.9em;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-prices {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-orig {
+  color: #94a3b8;
+  font-size: 0.88em;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-new {
+  color: #6366f1;
+  font-size: 1em;
+  font-weight: 700;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-each {
+  color: #64748b;
+  font-size: 0.82em;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-save {
+  color: #6366f1;
+  font-weight: 700;
+  font-size: 0.9em;
+}
+.wup-bmsm-style2 .wup-bmsm-s2-active-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.wup-bmsm-style3 .wup-bmsm-s3-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-flash {
+  display: inline-block;
+  align-self: flex-start;
+  margin-bottom: 4px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+  font-size: 0.75em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-card {
+  display: flex;
+  align-items: stretch;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-card.wup-bmsm-tier-active {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+.wup-bmsm-style3 .wup-bmsm-s3-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 14px 16px;
+  background: #eef2ff;
+  min-width: 100px;
+  text-align: center;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-disc-label {
+  font-size: 0.75em;
+  color: #64748b;
+  line-height: 1.2;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-pct {
+  display: block;
+  font-size: 1.7em;
+  font-weight: 700;
+  color: #6366f1;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-totals {
+  margin-top: 6px;
+  font-size: 0.78em;
+  color: #64748b;
+  line-height: 1.4;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-totals strong {
+  color: #1e293b;
+  font-weight: 600;
+  display: block;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-totals del {
+  color: #94a3b8;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-right {
+  flex: 1;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-buy-label {
+  font-size: 0.85em;
+  color: #64748b;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-price-each {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-price-each del {
+  color: #94a3b8;
+  font-size: 0.88em;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-price-each strong {
+  color: #1e293b;
+  font-size: 1.15em;
+  font-weight: 700;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-price-each span {
+  color: #64748b;
+  font-size: 0.8em;
+}
+.wup-bmsm-style3 .wup-bmsm-s3-save {
+  font-size: 0.9em;
+  font-weight: 700;
+  color: #6366f1;
+}
+
 .wup-bmsm-style4 .wup-bmsm-cards {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 .wup-bmsm-style4 .wup-bmsm-card {
   flex: 1 1 80px;
-  min-width: 70px;
-  border: 2px solid #e5e5e5;
+  min-width: 72px;
+  position: relative;
+  border: 1.5px solid #e2e8f0;
   border-radius: 8px;
-  padding: 10px 8px;
+  padding: 14px 10px 12px;
   text-align: center;
-  transition: border-color 0.2s, background 0.2s;
+  background: #ffffff;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 .wup-bmsm-style4 .wup-bmsm-card.wup-bmsm-tier-active {
-  border-color: #f5c518;
-  background: #fff8e1;
+  border-color: #6366f1;
+  background: #eef2ff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+.wup-bmsm-style4 .wup-bmsm-best-ribbon {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  padding: 2px 8px;
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.7em;
+  font-weight: 700;
+  border-radius: 0 8px 0 8px;
 }
 .wup-bmsm-style4 .wup-bmsm-badge {
-  font-size: 1.5em;
+  font-size: 1.6em;
   font-weight: 700;
-  color: #e44;
+  color: #6366f1;
   line-height: 1;
 }
-.wup-bmsm-style4 .wup-bmsm-card-label {
-  font-size: 0.8em;
-  margin-top: 4px;
-  color: #555;
-}
 .wup-bmsm-style4 .wup-bmsm-card-off {
-  font-size: 0.75em;
-  color: #e44;
-  font-weight: 600;
+  font-size: 0.7em;
+  font-weight: 700;
+  color: #6366f1;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.wup-bmsm-style4 .wup-bmsm-card-label {
+  font-size: 0.78em;
+  margin-top: 5px;
+  color: #64748b;
+}
+.wup-bmsm-style4 .wup-bmsm-progress {
+  margin-bottom: 6px;
+}
+.wup-bmsm-style4 .wup-bmsm-progress-track {
+  height: 6px;
+  background: #f8fafc;
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+.wup-bmsm-style4 .wup-bmsm-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #10b981, #6366f1);
+  transition: width 0.4s ease;
 }
 
-/* Notice messages */
-.wup-bmsm-notice {
-  padding: 8px 12px;
-  border-radius: 4px;
-  margin-top: 8px;
-  font-size: 0.875em;
-  line-height: 1.5;
-}
-.wup-bmsm-notice.wup-bmsm-congrats {
-  background: #e8f5e9;
-  border-left: 3px solid #4caf50;
-}
-.wup-bmsm-notice.wup-bmsm-remain {
-  background: #fff3e0;
-  border-left: 3px solid #f5c518;
-}
-
-/* Style5 layout — minimalist radio cards (reference-like) */
 .wup-bmsm-style5 {
-  background: #f6f6f7;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 16px;
-  font-family: Arial, Helvetica, sans-serif;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
 }
 .wup-bmsm-style5 .wup-bmsm-header {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 .wup-bmsm-style5 .wup-bmsm-header .wup-bmsm-heading {
-  margin: 0;
-  font-size: 2em;
-  line-height: 1.15;
+  margin: 0 0 2px;
+  font-size: 1.05em;
   font-weight: 700;
-  color: #261615;
+  color: #1e293b;
 }
 .wup-bmsm-style5 .wup-bmsm-header .wup-bmsm-subtitle {
-  display: none;
+  display: block;
+  margin: 0;
+  color: #64748b;
+  font-size: 0.85em;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #f6f6f7;
-  border: 2px solid #d8d8dc;
-  border-radius: 13px;
-  padding: 16px 18px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
   cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.wup-bmsm-style5 .wup-bmsm-s5-row:hover {
+  border-color: #a5b4fc;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-row.wup-bmsm-tier-active {
-  border-color: #e13b77;
+  border-color: #6366f1;
+  background: #eef2ff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 .wup-bmsm-style5 .wup-bmsm-s5-radio {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid #c4c4c9;
-  background: #fff;
+  border: 2px solid #e2e8f0;
+  background: #ffffff;
   position: relative;
   flex-shrink: 0;
+  transition: border-color 0.15s;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-row.wup-bmsm-tier-active .wup-bmsm-s5-radio {
-  border-color: #e13b77;
+  border-color: #6366f1;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-row.wup-bmsm-tier-active .wup-bmsm-s5-radio::after {
   content: "";
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #e13b77;
+  background: #6366f1;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -960,92 +1221,103 @@ body.wup-sc-body-open {
 .wup-bmsm-style5 .wup-bmsm-s5-line1 {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-main {
-  font-size: 2em;
+  font-size: 0.95em;
   font-weight: 700;
-  line-height: 1.15;
-  color: #261615;
+  color: #1e293b;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-chip {
-  border: 2px solid #6a3328;
-  color: #6a3328;
-  border-radius: 11px;
+  display: inline-block;
+  background: #6366f1;
+  color: #fff;
+  border-radius: 20px;
   padding: 1px 8px;
-  font-size: 0.9em;
-  line-height: 1.2;
+  font-size: 0.78em;
   font-weight: 700;
+  line-height: 1.5;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-sub {
   display: block;
-  margin-top: 5px;
-  font-size: 1.05em;
-  color: #8f8b8b;
+  margin-top: 2px;
+  font-size: 0.82em;
+  color: #64748b;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-prices {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
-  margin-left: 12px;
+  gap: 2px;
+  margin-left: auto;
   flex-shrink: 0;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-prices strong {
-  font-size: 2.2em;
-  font-weight: 500;
-  color: #6a3328;
-  line-height: 1;
+  font-size: 1em;
+  font-weight: 700;
+  color: #6366f1;
+  line-height: 1.2;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-prices del {
-  font-size: 1.1em;
-  color: #a6a1a1;
+  font-size: 0.82em;
+  color: #94a3b8;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-cta-wrap {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-cta {
   width: 100%;
-  height: 56px;
-  border: 0;
-  border-radius: 12px;
-  background: #e13b77;
+  padding: 11px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #6366f1;
   color: #fff;
-  font-size: 2em;
-  line-height: 1;
-  font-weight: 500;
+  font-size: 0.92em;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s;
 }
 .wup-bmsm-style5 .wup-bmsm-s5-cta:hover {
-  background: #d0336c;
+  background: #4f46e5;
 }
 .wup-bmsm-style5 .wup-bmsm-notice {
-  margin-top: 12px;
-  border-radius: 10px;
-  font-size: 0.9em;
-  padding: 10px 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  font-size: 0.86em;
+  padding: 8px 12px;
 }
 
-@media (max-width: 768px) {
-  .wup-bmsm-style5 .wup-bmsm-header .wup-bmsm-heading {
-    font-size: 1.6em;
+.wup-bmsm-notice {
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+.wup-bmsm-notice.wup-bmsm-congrats {
+  background: #ecfdf5;
+  border-left: 3px solid #10b981;
+  color: #059669;
+}
+.wup-bmsm-notice.wup-bmsm-remain {
+  background: #fffbeb;
+  border-left: 3px solid #f59e0b;
+  color: #b45309;
+}
+
+@media (max-width: 480px) {
+  .wup-bmsm-style3 .wup-bmsm-s3-left {
+    min-width: 80px;
+    padding: 10px 12px;
   }
-  .wup-bmsm-style5 .wup-bmsm-s5-main {
-    font-size: 1.5em;
+  .wup-bmsm-style4 .wup-bmsm-card {
+    flex: 1 1 60px;
+    min-width: 60px;
+    padding: 10px 6px 8px;
   }
-  .wup-bmsm-style5 .wup-bmsm-s5-prices strong {
-    font-size: 1.8em;
-  }
-  .wup-bmsm-style5 .wup-bmsm-s5-prices del {
-    font-size: 0.95em;
-  }
-  .wup-bmsm-style5 .wup-bmsm-s5-sub {
-    font-size: 0.95em;
-  }
-  .wup-bmsm-style5 .wup-bmsm-s5-cta {
-    height: 50px;
-    font-size: 1.6em;
+  .wup-bmsm-style4 .wup-bmsm-badge {
+    font-size: 1.3em;
   }
 }
 

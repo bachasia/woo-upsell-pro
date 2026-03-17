@@ -137,11 +137,11 @@ trait WUP_Settings_Schema {
 			[ 'id' => 'wup_bmsm_subtitle',                      'name' => 'Subtitle Text',           'type' => 'text',     'default' => '',         'tab' => 'wup-bmsm' ],
 			[ 'id' => 'wup_bmsm_categories',                    'name' => 'Eligible Categories',     'type' => 'text',     'default' => '',         'tab' => 'wup-bmsm', 'desc' => 'Comma-separated IDs (empty = all)' ],
 			[ 'id' => 'wup_bmsm_add_cart_button',               'name' => 'Show "Buy X" Button',    'type' => 'checkbox', 'default' => 'no',       'tab' => 'wup-bmsm' ],
-			[ 'id' => 'wup_bmsm_add_action_label',              'name' => 'Button Label',            'type' => 'text',     'default' => 'Buy [quantity]', 'tab' => 'wup-bmsm' ],
-			[ 'id' => 'wup_bmsm_congrats_items',                'name' => 'Congrats (items)',        'type' => 'text',     'default' => '🎉 You unlocked [discount]% discount!', 'tab' => 'wup-bmsm' ],
-			[ 'id' => 'wup_bmsm_congrats_subtotal',             'name' => 'Congrats (subtotal)',     'type' => 'text',     'default' => '🎉 You unlocked [discount]% discount!', 'tab' => 'wup-bmsm' ],
-			[ 'id' => 'wup_bmsm_remain_items',                  'name' => 'Remain (items)',          'type' => 'text',     'default' => 'Add [remain] more items to save [discount]%!', 'tab' => 'wup-bmsm' ],
-			[ 'id' => 'wup_bmsm_remain_subtotal',               'name' => 'Remain (subtotal)',       'type' => 'text',     'default' => 'Spend [remain] more to save [discount]%!', 'tab' => 'wup-bmsm' ],
+			[ 'id' => 'wup_bmsm_add_action_label',              'name' => 'Button Label',            'type' => 'text',     'default' => 'Buy {quantity}', 'tab' => 'wup-bmsm' ],
+			[ 'id' => 'wup_bmsm_congrats_items',                'name' => 'Congrats (items)',        'type' => 'text',     'default' => '🎉 You unlocked [discount_amount]% discount!', 'tab' => 'wup-bmsm' ],
+			[ 'id' => 'wup_bmsm_congrats_subtotal',             'name' => 'Congrats (subtotal)',     'type' => 'text',     'default' => '🎉 You unlocked [discount_amount]% discount!', 'tab' => 'wup-bmsm' ],
+			[ 'id' => 'wup_bmsm_remain_items',                  'name' => 'Remain (items)',          'type' => 'text',     'default' => 'Add [remain] more to save [discount_amount]%!', 'tab' => 'wup-bmsm' ],
+			[ 'id' => 'wup_bmsm_remain_subtotal',               'name' => 'Remain (subtotal)',       'type' => 'text',     'default' => 'Spend [remain] more to save [discount_amount]%!', 'tab' => 'wup-bmsm' ],
 		];
 	}
 

@@ -99,7 +99,7 @@ $btn_label_tpl = $opts['add_action_label'] ?? 'Buy {quantity}';
 			: 'Hooray! You got BIG discount <strong>[discount_amount]% OFF</strong> on each product!';
 		$msg = str_replace(
 			[ '[discount_amount]', '[discount]', '[items_count]' ],
-			[ $active_tier['discount'], (int) $current_value ],
+			[ $active_tier['discount'], $active_tier['discount'], (int) $current_value ],
 			! empty( $opts[ $key_tpl ] ) ? $opts[ $key_tpl ] : $defaults
 		);
 	?>
@@ -116,7 +116,7 @@ $btn_label_tpl = $opts['add_action_label'] ?? 'Buy {quantity}';
 			: wc_price( $next_tier['min'] - $current_value );
 		$msg = str_replace(
 			[ '[remain]', '[discount_amount]', '[discount]' ],
-			[ $remain, $next_tier['discount'] ],
+			[ $remain, $next_tier['discount'], $next_tier['discount'] ],
 			! empty( $opts[ $key_tpl ] ) ? $opts[ $key_tpl ] : $defaults
 		);
 	?>

@@ -126,172 +126,525 @@
     }
 }
 
+// ============================================================
+// WUP BMSM — Soft Modern E-commerce UI
+// Design tokens
+// ============================================================
+$bmsm-accent:       #6366f1; // indigo-500
+$bmsm-accent-light: #eef2ff; // indigo-50
+$bmsm-accent-dark:  #4f46e5; // indigo-600
+$bmsm-success:      #10b981; // emerald-500
+$bmsm-success-bg:   #ecfdf5; // emerald-50
+$bmsm-amber:        #f59e0b; // amber-500
+$bmsm-amber-bg:     #fffbeb; // amber-50
+$bmsm-text:         #1e293b; // slate-800
+$bmsm-text-muted:   #64748b; // slate-500
+$bmsm-text-faint:   #94a3b8; // slate-400
+$bmsm-border:       #e2e8f0; // slate-200
+$bmsm-bg:           #f8fafc; // slate-50
+$bmsm-card-bg:      #ffffff;
+$bmsm-radius-sm:    8px;
+$bmsm-radius-md:    12px;
+$bmsm-radius-lg:    16px;
+
 /* === WUP Tier Table Styles === */
 
+// Shared wrapper
 .wup-bmsm {
     margin: 20px 0;
-    padding: 16px;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 6px;
-    font-size: 0.9em;
+    background: $bmsm-card-bg;
+    border-radius: $bmsm-radius-md;
+    font-size: 1.2em;
 }
 
+// Shared header
 .wup-bmsm-header {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 
     .wup-bmsm-heading {
         margin: 0 0 4px;
-        font-size: 1.1em;
+        font-size: 1.05em;
         font-weight: 700;
+        color: $bmsm-text;
     }
 
     .wup-bmsm-subtitle {
         margin: 0;
-        color: #666;
-        font-size: 0.9em;
+        color: $bmsm-text-muted;
+        font-size: 0.88em;
     }
 }
 
-/* Default layout — table */
+// -------------------------------------------------------
+// Style 1 (Default) — Soft Tiered Table
+// -------------------------------------------------------
 .wup-bmsm-default {
     .wup-bmsm-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
         margin-bottom: 10px;
+        border-radius: $bmsm-radius-sm;
+        overflow: hidden;
+        border: 1px solid $bmsm-border;
 
         th, td {
-            padding: 8px 10px;
-            border: 1px solid #e5e5e5;
+            padding: 10px 14px;
             text-align: left;
+            border-bottom: 1px solid $bmsm-border;
+            font-size: 0.9em;
         }
 
-        th { background: #f7f7f7; font-weight: 600; }
+        tr:last-child td { border-bottom: none; }
+
+        th {
+            background: $bmsm-bg;
+            font-weight: 600;
+            color: $bmsm-text-muted;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
     }
 
     .wup-bmsm-tier-active td {
-        background: #fff8e1;
-        border-color: #f5c518;
+        background: $bmsm-accent-light;
+        font-weight: 600;
+        color: $bmsm-text;
+    }
+
+    // Best row label
+    .wup-bmsm-best-tag {
+        display: inline-block;
+        margin-left: 6px;
+        padding: 1px 7px;
+        background: $bmsm-accent;
+        color: #fff;
+        border-radius: 20px;
+        font-size: 0.75em;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+    // Discount col
+    .wup-bmsm-td-discount strong {
+        color: $bmsm-accent;
+        font-size: 1.05em;
+    }
+
+    .wup-bmsm-off-label {
+        margin-left: 2px;
+        color: $bmsm-text-muted;
+        font-size: 0.85em;
+    }
+
+    .wup-bmsm-unlocked {
+        display: inline-block;
+        margin-left: 6px;
+        color: $bmsm-success;
+        font-size: 0.82em;
         font-weight: 600;
     }
 
     .wup-bmsm-add-btn {
         font-size: 0.8em;
-        padding: 4px 10px;
+        padding: 5px 12px;
+        border-radius: 6px;
         cursor: pointer;
+        border: 1px solid $bmsm-accent;
+        background: $bmsm-accent-light;
+        color: $bmsm-accent;
+        font-weight: 600;
+        transition: background 0.15s, color 0.15s;
+
+        &:hover {
+            background: $bmsm-accent;
+            color: #fff;
+        }
     }
 }
 
-/* Style4 layout — discount cards */
+// -------------------------------------------------------
+// Style 2 — Soft Badge Row
+// -------------------------------------------------------
+.wup-bmsm-style2 {
+    .wup-bmsm-s2-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 4px;
+    }
+
+    .wup-bmsm-s2-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 16px;
+        border-radius: $bmsm-radius-sm;
+        border: 1.5px solid $bmsm-border;
+        background: $bmsm-card-bg;
+        transition: border-color 0.15s, background 0.15s;
+
+        &.wup-bmsm-tier-active {
+            border-color: $bmsm-accent;
+            background: $bmsm-accent-light;
+        }
+    }
+
+    // Square badge — e.g. "10% OFF"
+    .wup-bmsm-s2-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 54px;
+        padding: 7px 10px;
+        border-radius: $bmsm-radius-sm;
+        background: $bmsm-accent;
+        color: #fff;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .wup-bmsm-s2-pct {
+        font-size: 1.2em;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .wup-bmsm-s2-off {
+        font-size: 0.65em;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        margin-top: 2px;
+        opacity: 0.9;
+    }
+
+    // Right pill content
+    .wup-bmsm-s2-pill {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        min-width: 0;
+    }
+
+    .wup-bmsm-s2-buy {
+        color: $bmsm-text;
+        font-size: 0.9em;
+    }
+
+    .wup-bmsm-s2-prices {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .wup-bmsm-s2-orig {
+        color: $bmsm-text-faint;
+        font-size: 0.88em;
+    }
+
+    .wup-bmsm-s2-new {
+        color: $bmsm-accent;
+        font-size: 1em;
+        font-weight: 700;
+    }
+
+    .wup-bmsm-s2-each {
+        color: $bmsm-text-muted;
+        font-size: 0.82em;
+    }
+
+    .wup-bmsm-s2-save {
+        color: $bmsm-accent;
+        font-weight: 700;
+        font-size: 0.9em;
+    }
+
+    // Active indicator dot
+    .wup-bmsm-s2-active-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: $bmsm-success;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+}
+
+// -------------------------------------------------------
+// Style 3 — Soft Flash Card
+// -------------------------------------------------------
+.wup-bmsm-style3 {
+    .wup-bmsm-s3-list {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 4px;
+    }
+
+    // "Flash Sale" ribbon chip
+    .wup-bmsm-s3-flash {
+        display: inline-block;
+        align-self: flex-start;
+        margin-bottom: 4px;
+        padding: 3px 12px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, $bmsm-accent, $bmsm-accent-dark);
+        color: #fff;
+        font-size: 0.75em;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .wup-bmsm-s3-card {
+        display: flex;
+        align-items: stretch;
+        border: 1.5px solid $bmsm-border;
+        border-radius: $bmsm-radius-sm;
+        overflow: hidden;
+        background: $bmsm-card-bg;
+        transition: border-color 0.15s, box-shadow 0.15s;
+
+        &.wup-bmsm-tier-active {
+            border-color: $bmsm-accent;
+            box-shadow: 0 0 0 3px rgba($bmsm-accent, 0.12);
+        }
+    }
+
+    // Left accent panel
+    .wup-bmsm-s3-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 14px 16px;
+        background: $bmsm-accent-light;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .wup-bmsm-s3-disc-label {
+        font-size: 0.75em;
+        color: $bmsm-text-muted;
+        line-height: 1.2;
+    }
+
+    .wup-bmsm-s3-pct {
+        display: block;
+        font-size: 1.7em;
+        font-weight: 700;
+        color: $bmsm-accent;
+        line-height: 1.1;
+        margin-top: 2px;
+    }
+
+    .wup-bmsm-s3-totals {
+        margin-top: 6px;
+        font-size: 0.78em;
+        color: $bmsm-text-muted;
+        line-height: 1.4;
+
+        strong { color: $bmsm-text; font-weight: 600; display: block; }
+        del    { color: $bmsm-text-faint; }
+    }
+
+    // Right content panel
+    .wup-bmsm-s3-right {
+        flex: 1;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .wup-bmsm-s3-buy-label {
+        font-size: 0.85em;
+        color: $bmsm-text-muted;
+    }
+
+    .wup-bmsm-s3-price-each {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+
+        del    { color: $bmsm-text-faint; font-size: 0.88em; }
+        strong { color: $bmsm-text; font-size: 1.15em; font-weight: 700; }
+        span   { color: $bmsm-text-muted; font-size: 0.8em; }
+    }
+
+    .wup-bmsm-s3-save {
+        font-size: 0.9em;
+        font-weight: 700;
+        color: $bmsm-accent;
+    }
+}
+
+// -------------------------------------------------------
+// Style 4 — Soft Card Grid + Progress
+// -------------------------------------------------------
 .wup-bmsm-style4 {
     .wup-bmsm-cards {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 14px;
     }
 
     .wup-bmsm-card {
         flex: 1 1 80px;
-        min-width: 70px;
-        border: 2px solid #e5e5e5;
-        border-radius: 8px;
-        padding: 10px 8px;
+        min-width: 72px;
+        position: relative;
+        border: 1.5px solid $bmsm-border;
+        border-radius: $bmsm-radius-sm;
+        padding: 14px 10px 12px;
         text-align: center;
-        transition: border-color .2s, background .2s;
+        background: $bmsm-card-bg;
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 
         &.wup-bmsm-tier-active {
-            border-color: #f5c518;
-            background: #fff8e1;
+            border-color: $bmsm-accent;
+            background: $bmsm-accent-light;
+            box-shadow: 0 0 0 3px rgba($bmsm-accent, 0.1);
         }
+    }
+
+    // Best ribbon
+    .wup-bmsm-best-ribbon {
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        padding: 2px 8px;
+        background: $bmsm-accent;
+        color: #fff;
+        font-size: 0.7em;
+        font-weight: 700;
+        border-radius: 0 $bmsm-radius-sm 0 $bmsm-radius-sm;
     }
 
     .wup-bmsm-badge {
-        font-size: 1.5em;
+        font-size: 1.6em;
         font-weight: 700;
-        color: #e44;
+        color: $bmsm-accent;
         line-height: 1;
     }
 
-    .wup-bmsm-card-label { font-size: 0.8em; margin-top: 4px; color: #555; }
-    .wup-bmsm-card-off   { font-size: 0.75em; color: #e44; font-weight: 600; text-transform: uppercase; }
+    .wup-bmsm-card-off {
+        font-size: 0.7em;
+        font-weight: 700;
+        color: $bmsm-accent;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .wup-bmsm-card-label {
+        font-size: 0.78em;
+        margin-top: 5px;
+        color: $bmsm-text-muted;
+    }
+
+    // Progress bar
+    .wup-bmsm-progress {
+        margin-bottom: 6px;
+    }
+
+    .wup-bmsm-progress-track {
+        height: 6px;
+        background: $bmsm-bg;
+        border-radius: 99px;
+        overflow: hidden;
+        border: 1px solid $bmsm-border;
+    }
+
+    .wup-bmsm-progress-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg, $bmsm-success, $bmsm-accent);
+        transition: width 0.4s ease;
+    }
 }
 
-/* Notice messages */
-.wup-bmsm-notice {
-    padding: 8px 12px;
-    border-radius: 4px;
-    margin-top: 8px;
-    font-size: 0.875em;
-    line-height: 1.5;
-
-    &.wup-bmsm-congrats { background: #e8f5e9; border-left: 3px solid #4caf50; }
-    &.wup-bmsm-remain   { background: #fff3e0; border-left: 3px solid #f5c518; }
-}
-
-/* Style5 layout — minimalist radio cards (reference-like) */
+// -------------------------------------------------------
+// Style 5 — Soft Radio List
+// -------------------------------------------------------
 .wup-bmsm-style5 {
-    background: #f6f6f7;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 16px;
-    font-family: Arial, Helvetica, sans-serif;
+    background: $bmsm-bg;
+    border: 1px solid $bmsm-border;
+    border-radius: $bmsm-radius-md;
+    padding: 18px 20px;
 
     .wup-bmsm-header {
-        margin-bottom: 12px;
+        margin-bottom: 14px;
 
         .wup-bmsm-heading {
-            margin: 0;
-            font-size: 2em;
-            line-height: 1.15;
+            margin: 0 0 2px;
+            font-size: 1.05em;
             font-weight: 700;
-            color: #261615;
+            color: $bmsm-text;
         }
 
-        .wup-bmsm-subtitle { display: none; }
+        .wup-bmsm-subtitle {
+            display: block;
+            margin: 0;
+            color: $bmsm-text-muted;
+            font-size: 0.85em;
+        }
     }
 
     .wup-bmsm-s5-list {
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 8px;
     }
 
     .wup-bmsm-s5-row {
         display: flex;
         align-items: center;
         gap: 12px;
-        background: #f6f6f7;
-        border: 2px solid #d8d8dc;
-        border-radius: 13px;
-        padding: 16px 18px;
+        background: $bmsm-card-bg;
+        border: 1.5px solid $bmsm-border;
+        border-radius: $bmsm-radius-sm;
+        padding: 12px 14px;
         cursor: pointer;
+        transition: border-color 0.15s, box-shadow 0.15s;
+
+        &:hover {
+            border-color: #a5b4fc; // indigo-300
+        }
 
         &.wup-bmsm-tier-active {
-            border-color: #e13b77;
+            border-color: $bmsm-accent;
+            background: $bmsm-accent-light;
+            box-shadow: 0 0 0 3px rgba($bmsm-accent, 0.1);
         }
     }
 
+    // Custom radio button
     .wup-bmsm-s5-radio {
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        border: 2px solid #c4c4c9;
-        background: #fff;
+        border: 2px solid $bmsm-border;
+        background: $bmsm-card-bg;
         position: relative;
         flex-shrink: 0;
+        transition: border-color 0.15s;
     }
 
     .wup-bmsm-s5-row.wup-bmsm-tier-active .wup-bmsm-s5-radio {
-        border-color: #e13b77;
+        border-color: $bmsm-accent;
 
         &::after {
             content: '';
-            width: 9px;
-            height: 9px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: #e13b77;
+            background: $bmsm-accent;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -299,6 +652,7 @@
         }
     }
 
+    // Text content
     .wup-bmsm-s5-copy {
         flex: 1;
         min-width: 0;
@@ -307,89 +661,124 @@
     .wup-bmsm-s5-line1 {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         flex-wrap: wrap;
     }
 
     .wup-bmsm-s5-main {
-        font-size: 2em;
+        font-size: 0.95em;
         font-weight: 700;
-        line-height: 1.15;
-        color: #261615;
+        color: $bmsm-text;
     }
 
+    // Discount chip — solid fill
     .wup-bmsm-s5-chip {
-        border: 2px solid #6a3328;
-        color: #6a3328;
-        border-radius: 11px;
+        display: inline-block;
+        background: $bmsm-accent;
+        color: #fff;
+        border-radius: 20px;
         padding: 1px 8px;
-        font-size: 0.9em;
-        line-height: 1.2;
+        font-size: 0.78em;
         font-weight: 700;
+        line-height: 1.5;
     }
 
     .wup-bmsm-s5-sub {
         display: block;
-        margin-top: 5px;
-        font-size: 1.05em;
-        color: #8f8b8b;
+        margin-top: 2px;
+        font-size: 0.82em;
+        color: $bmsm-text-muted;
     }
 
+    // Price stack (right)
     .wup-bmsm-s5-prices {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 4px;
-        margin-left: 12px;
+        gap: 2px;
+        margin-left: auto;
         flex-shrink: 0;
 
         strong {
-            font-size: 2.2em;
-            font-weight: 500;
-            color: #6a3328;
-            line-height: 1;
+            font-size: 1em;
+            font-weight: 700;
+            color: $bmsm-accent;
+            line-height: 1.2;
         }
 
         del {
-            font-size: 1.1em;
-            color: #a6a1a1;
+            font-size: 0.82em;
+            color: $bmsm-text-faint;
         }
     }
 
+    // CTA button
     .wup-bmsm-s5-cta-wrap {
-        margin-top: 14px;
+        margin-top: 12px;
     }
 
     .wup-bmsm-s5-cta {
         width: 100%;
-        height: 56px;
-        border: 0;
-        border-radius: 12px;
-        background: #e13b77;
+        padding: 11px 20px;
+        border: none;
+        border-radius: $bmsm-radius-sm;
+        background: $bmsm-accent;
         color: #fff;
-        font-size: 2em;
-        line-height: 1;
-        font-weight: 500;
+        font-size: 0.92em;
+        font-weight: 600;
         cursor: pointer;
+        transition: background 0.15s;
 
-        &:hover { background: #d0336c; }
+        &:hover { background: $bmsm-accent-dark; }
     }
 
     .wup-bmsm-notice {
-        margin-top: 12px;
-        border-radius: 10px;
-        font-size: 0.9em;
-        padding: 10px 12px;
+        margin-top: 10px;
+        border-radius: $bmsm-radius-sm;
+        font-size: 0.86em;
+        padding: 8px 12px;
     }
 }
 
-@media (max-width: 768px) {
-    .wup-bmsm-style5 {
-        .wup-bmsm-header .wup-bmsm-heading { font-size: 1.6em; }
-        .wup-bmsm-s5-main { font-size: 1.5em; }
-        .wup-bmsm-s5-prices strong { font-size: 1.8em; }
-        .wup-bmsm-s5-prices del { font-size: 0.95em; }
-        .wup-bmsm-s5-sub { font-size: 0.95em; }
-        .wup-bmsm-s5-cta { height: 50px; font-size: 1.6em; }
+// -------------------------------------------------------
+// Shared notice messages
+// -------------------------------------------------------
+.wup-bmsm-notice {
+    padding: 8px 12px;
+    border-radius: $bmsm-radius-sm;
+    margin-top: 10px;
+    font-size: 0.875em;
+    line-height: 1.5;
+
+    &.wup-bmsm-congrats {
+        background: $bmsm-success-bg;
+        border-left: 3px solid $bmsm-success;
+        color: #059669; // emerald-600
+    }
+
+    &.wup-bmsm-remain {
+        background: $bmsm-amber-bg;
+        border-left: 3px solid $bmsm-amber;
+        color: #b45309; // amber-700
+    }
+}
+
+// -------------------------------------------------------
+// Responsive
+// -------------------------------------------------------
+@media (max-width: 480px) {
+    .wup-bmsm-style3 .wup-bmsm-s3-left {
+        min-width: 80px;
+        padding: 10px 12px;
+    }
+
+    .wup-bmsm-style4 .wup-bmsm-card {
+        flex: 1 1 60px;
+        min-width: 60px;
+        padding: 10px 6px 8px;
+    }
+
+    .wup-bmsm-style4 .wup-bmsm-badge {
+        font-size: 1.3em;
     }
 }
