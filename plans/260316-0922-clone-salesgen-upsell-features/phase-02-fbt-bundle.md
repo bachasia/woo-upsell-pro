@@ -1,6 +1,6 @@
 # Phase 02 — Frequently Bought Together (FBT Bundle)
 
-**Status:** Complete | **Priority:** P0 | **Effort:** L
+**Status:** Done | **Priority:** P0 | **Effort:** L
 **Depends on:** Phase 01
 
 ## Overview

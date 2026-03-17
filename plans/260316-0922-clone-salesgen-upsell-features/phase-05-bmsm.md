@@ -1,6 +1,6 @@
 # Phase 05 — Buy More Save More (BMSM) Pricing Engine
 
-**Status:** Todo | **Priority:** P0 | **Effort:** L
+**Status:** Done | **Priority:** P0 | **Effort:** L
 **Depends on:** Phase 00
 
 ## Overview

@@ -92,6 +92,9 @@ if ( ! class_exists( 'WUP_Product_Source' ) ) {
 		/** AJAX: manually flush all source transients. Requires nonce 'wup-admin'. */
 		public static function ajax_clear_transients(): void {
 			check_ajax_referer( 'wup-admin' );
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				wp_send_json_error( 'Unauthorized' );
+			}
 			wup_delete_transients_by_prefix( 'src_' );
 			wp_send_json_success();
 		}

@@ -1,6 +1,6 @@
 # Phase 03 — Post-ATC Lightbox Popup + Slide Side Cart
 
-**Status:** Complete | **Priority:** P0 | **Effort:** XL
+**Status:** Done | **Priority:** P0 | **Effort:** XL
 **Depends on:** Phase 01, Phase 02 (AJAX fragments contract)
 
 ---

@@ -162,3 +162,71 @@
     });
 
 })(jQuery);
+
+/* Woo Upsell Pro — Sales Popup (Social Proof) */
+(function ($) {
+    'use strict';
+
+    if (typeof wupSalesPopup === 'undefined') {
+        return;
+    }
+
+    var cfg      = wupSalesPopup;
+    var $popup   = $('#wup-sales-popup');
+    var loopTimer   = null;
+    var hideTimer   = null;
+
+    if (!cfg.products || !cfg.products.length || !cfg.names.length || !cfg.cities.length) {
+        return;
+    }
+
+    function rand(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function randomTime() {
+        var n = Math.floor(Math.random() * 47) + 2;
+        if (n < 60) {
+            return n + ' ' + (n === 1 ? 'minute' : 'minutes');
+        }
+        var h = Math.floor(n / 60);
+        return h + ' ' + (h === 1 ? 'hour' : 'hours');
+    }
+
+    function showNext() {
+        var product = rand(cfg.products);
+        var name    = rand(cfg.names);
+        var city    = rand(cfg.cities);
+
+        var msg = cfg.msg_template
+            .replace('{{name}}',    name)
+            .replace('{{city}}',    city)
+            .replace('{{product}}', product.name)
+            .replace('{{time}}',    randomTime());
+
+        $popup.find('.wup-sp__message').html(msg);
+        $popup.find('.wup-sp__image img').attr({ src: product.image, alt: product.name });
+        $popup.stop(true).fadeIn(300);
+
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(function () {
+            $popup.fadeOut(300);
+        }, (cfg.display_time || 4) * 1000);
+    }
+
+    $(document).on('click', '#wup-sales-popup .wup-sp__close', function () {
+        $popup.fadeOut(300);
+        clearTimeout(loopTimer);
+        clearTimeout(hideTimer);
+    });
+
+    function startLoop() {
+        loopTimer = setTimeout(function tick() {
+            showNext();
+            loopTimer = setTimeout(tick, (cfg.loop_time || 5) * 1000);
+        }, 2000);
+    }
+
+    startLoop();
+
+})(jQuery);

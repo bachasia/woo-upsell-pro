@@ -1,0 +1,6 @@
+node_modules/
+*.zip
+repomix-output.xml
+public/css/*.map
+public/js/build/*.map
+.DS_Store

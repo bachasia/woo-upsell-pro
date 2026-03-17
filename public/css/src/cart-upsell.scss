@@ -1,1 +1,123 @@
-/* cart-upsell styles — implemented in Phase 04 */
+/* Woo Upsell Pro — Cart Upsell Block */
+
+.wup-cart-upsell-block {
+    margin: 32px 0;
+
+    .wup-cs-heading {
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #333;
+    }
+
+    .wup-cs-items {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 480px) {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+    }
+
+    .wup-cs-item {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 6px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        &:hover {
+            border-color: #ccc;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+    }
+
+    .wup-cs-img-link {
+        display: block;
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: block;
+        }
+    }
+
+    .wup-cs-info {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+    }
+
+    .wup-cs-title {
+        font-size: 0.875em;
+        font-weight: 500;
+        color: #333;
+        text-decoration: none;
+        line-height: 1.3;
+
+        &:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+    }
+
+    .wup-cs-price {
+        font-size: 0.9em;
+        font-weight: 600;
+        color: #222;
+
+        del {
+            color: #999;
+            font-weight: 400;
+            margin-right: 4px;
+        }
+
+        ins {
+            text-decoration: none;
+            color: #e44;
+        }
+    }
+
+    .wup-cs-variant {
+        width: 100%;
+        font-size: 0.8em;
+        padding: 4px 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: #fff;
+        cursor: pointer;
+
+        &:focus {
+            outline: none;
+            border-color: #888;
+        }
+    }
+
+    .wup-cs-atc {
+        margin-top: auto;
+        width: 100%;
+        font-size: 0.8em;
+        padding: 8px 12px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 4px;
+
+        &:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+    }
+}

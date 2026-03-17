@@ -1,6 +1,6 @@
 # Phase 07 — Email Coupon (Thank-you) + FOMO Stock Counter
 
-**Status:** Todo | **Priority:** P1 | **Effort:** S
+**Status:** Done | **Priority:** P1 | **Effort:** S
 **Depends on:** Phase 00
 
 ---
@@ -170,16 +170,16 @@ Token `[stock]` replaced with actual `$product->get_stock_quantity()`.
 ## Todo
 
 ### Email Coupon
-- [ ] `includes/features/class-wup-email-coupon.php`
-- [ ] `templates/email/coupon.php` (HTML email template, optional)
-- [ ] WC_Coupon programmatic creation (percent, usage_limit, usage_limit_per_user)
-- [ ] Token replacement in subject + body
-- [ ] `_wup_coupon_sent` order meta duplicate guard
-- [ ] `wp_mail()` with HTML content type header
+- [x] `includes/features/class-wup-email-coupon.php`
+- [x] `templates/email/coupon.php` (HTML email template, optional)
+- [x] WC_Coupon programmatic creation (percent, usage_limit, usage_limit_per_user)
+- [x] Token replacement in subject + body
+- [x] `_wup_coupon_sent` order meta duplicate guard
+- [x] `wp_mail()` with HTML content type header
 
 ### FOMO Stock
-- [ ] `includes/features/class-wup-fomo-stock.php`
-- [ ] Stock range check (min/max display window)
-- [ ] `[stock]` token replacement
-- [ ] Inline color style from setting
-- [ ] Only runs on single product pages
+- [x] `includes/features/class-wup-fomo-stock.php`
+- [x] Stock range check (min/max display window)
+- [x] `[stock]` token replacement
+- [x] Inline color style from setting
+- [x] Only runs on single product pages

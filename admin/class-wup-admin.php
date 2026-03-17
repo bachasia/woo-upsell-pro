@@ -25,6 +25,10 @@ if ( ! class_exists( 'WUP_Admin' ) ) {
 		}
 
 		private function __construct() {
+			// Boot settings page early (during plugins_loaded) so its admin_init hooks
+			// (handle_save, register_settings) are registered before admin_init fires.
+			WUP_Settings_Page::get_instance();
+
 			add_action( 'admin_menu',            [ $this, 'register_menu' ] );
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
 		}

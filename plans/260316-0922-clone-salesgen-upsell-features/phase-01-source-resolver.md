@@ -1,6 +1,6 @@
 # Phase 01 — Product Source Resolver + Variation Resolver
 
-**Status:** Todo | **Priority:** P0 | **Effort:** M
+**Status:** Done | **Priority:** P0 | **Effort:** M
 **Depends on:** Phase 00
 
 ## Overview

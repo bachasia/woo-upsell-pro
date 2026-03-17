@@ -1,6 +1,6 @@
 # Phase 00 — Foundation
 
-**Status:** Todo | **Priority:** P0 | **Effort:** S
+**Status:** Done | **Priority:** P0 | **Effort:** S
 
 ## Overview
 

@@ -58,13 +58,16 @@ if ( ! class_exists( 'WUP_Assets' ) ) {
 			$this->output_dynamic_css();
 		}
 
-		/** Register the primary public stylesheet (empty placeholder until features add CSS). */
+		/** Register the primary public stylesheet with robust cache-busting version. */
 		private function register_public_styles(): void {
+			$css_path = WUP_PUBLIC_DIR . 'css/wup-public.css';
+			$stamp    = file_exists( $css_path ) ? (string) filemtime( $css_path ) : WUP_VERSION;
+			$version  = WUP_VERSION . '-' . $stamp;
 			wp_register_style(
 				'wup-public-styles',
 				WUP_URL . 'public/css/wup-public.css',
 				[],
-				WUP_VERSION
+				$version
 			);
 			wp_enqueue_style( 'wup-public-styles' );
 		}
@@ -159,17 +162,17 @@ if ( ! class_exists( 'WUP_Assets' ) ) {
 		// Admin assets
 		// -------------------------------------------------------------------------
 
-		/** Enqueue admin stylesheet on all WP admin pages. */
+		/** Enqueue admin stylesheet on plugin settings page only. */
 		public function enqueue_admin_assets( string $hook ): void {
-			// Scoped to plugin admin pages only.
-			if ( strpos( $hook, 'wup-' ) === false ) {
+			if ( 'toplevel_page_wup-settings' !== $hook ) {
 				return;
 			}
 
+			wp_enqueue_style( 'dashicons' );
 			wp_enqueue_style(
 				'wup-admin-styles',
 				WUP_URL . 'admin/css/wup-admin.css',
-				[],
+				[ 'dashicons' ],
 				WUP_VERSION
 			);
 		}

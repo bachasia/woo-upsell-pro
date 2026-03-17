@@ -1,0 +1,317 @@
+/* =========================================================
+   Woo Upsell Pro — Admin Settings UI
+   Pure CSS, no external dependencies, ~5KB gzipped.
+   Layout: fixed sidebar nav + scrollable content cards.
+   ========================================================= */
+
+:root {
+  --wup-accent:      #4f46e5;
+  --wup-accent-dark: #3730a3;
+  --wup-accent-soft: #eef2ff;
+  --wup-sidebar-bg:  #1e1b4b;
+  --wup-sidebar-w:   220px;
+  --wup-text:        #1e293b;
+  --wup-muted:       #64748b;
+  --wup-border:      #e2e8f0;
+  --wup-card-bg:     #ffffff;
+  --wup-input-bg:    #f8fafc;
+  --wup-success:     #10b981;
+  --wup-radius:      10px;
+  --wup-shadow:      0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+}
+
+/* ── Wrapper ────────────────────────────────────────────── */
+.wup-settings-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin: 20px 20px 0 0;
+  min-height: calc(100vh - 80px);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--wup-text);
+}
+.wup-settings-wrap h1 { display: none; } /* hide WP default h1 */
+
+/* ── Sidebar ────────────────────────────────────────────── */
+.wup-sidebar {
+  width: var(--wup-sidebar-w);
+  min-width: var(--wup-sidebar-w);
+  background: var(--wup-sidebar-bg);
+  border-radius: var(--wup-radius) 0 0 var(--wup-radius);
+  padding: 0 0 24px;
+  position: sticky;
+  top: 32px;
+  align-self: flex-start;
+  overflow: hidden;
+}
+
+.wup-sidebar-brand {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  margin-bottom: 8px;
+}
+.wup-sidebar-brand strong {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.wup-sidebar-brand span {
+  font-size: 11px;
+  color: rgba(255,255,255,.4);
+}
+
+.wup-sidebar nav { padding: 0 8px; }
+
+.wup-sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  transition: background .15s, color .15s;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.wup-sidebar nav a .wup-nav-icon {
+  font-size: 15px;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+  opacity: .8;
+}
+.wup-sidebar nav a:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+.wup-sidebar nav a.active {
+  background: var(--wup-accent);
+  color: #fff;
+}
+.wup-sidebar nav a.active .wup-nav-icon { opacity: 1; }
+
+/* ── Content ────────────────────────────────────────────── */
+.wup-content {
+  flex: 1;
+  padding: 28px 28px 40px;
+  background: #f1f5f9;
+  min-height: calc(100vh - 80px);
+  border-radius: 0 var(--wup-radius) var(--wup-radius) 0;
+}
+
+.wup-content-header {
+  margin-bottom: 24px;
+}
+.wup-content-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--wup-text);
+  margin: 0 0 4px;
+}
+.wup-content-header p {
+  font-size: 13px;
+  color: var(--wup-muted);
+  margin: 0;
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+.wup-card {
+  background: var(--wup-card-bg);
+  border-radius: var(--wup-radius);
+  box-shadow: var(--wup-shadow);
+  border: 1px solid var(--wup-border);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.wup-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--wup-muted);
+  padding: 14px 20px 10px;
+  border-bottom: 1px solid var(--wup-border);
+}
+
+/* ── Fields ─────────────────────────────────────────────── */
+.wup-field {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.wup-field:last-child { border-bottom: none; }
+
+.wup-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wup-text);
+  padding-top: 8px;
+}
+.wup-field-desc {
+  font-size: 11px;
+  color: var(--wup-muted);
+  margin-top: 3px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.wup-field-input { display: flex; flex-direction: column; gap: 6px; }
+
+/* text / number / color inputs */
+.wup-field input[type="text"],
+.wup-field input[type="number"],
+.wup-field select,
+.wup-field textarea {
+  width: 100%;
+  max-width: 380px;
+  padding: 7px 11px;
+  border: 1.5px solid var(--wup-border);
+  border-radius: 7px;
+  font-size: 13px;
+  background: var(--wup-input-bg);
+  color: var(--wup-text);
+  transition: border-color .15s, box-shadow .15s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.wup-field input[type="text"]:focus,
+.wup-field input[type="number"]:focus,
+.wup-field select:focus,
+.wup-field textarea:focus {
+  outline: none;
+  border-color: var(--wup-accent);
+  box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+  background: #fff;
+}
+.wup-field textarea { min-height: 80px; resize: vertical; }
+.wup-field input[type="number"] { max-width: 100px; }
+
+.wup-field input[type="color"] {
+  width: 40px;
+  height: 36px;
+  padding: 2px 3px;
+  border: 1.5px solid var(--wup-border);
+  border-radius: 7px;
+  cursor: pointer;
+  background: var(--wup-input-bg);
+}
+
+/* Toggle switch for checkboxes */
+.wup-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding-top: 6px;
+}
+.wup-toggle input[type="checkbox"] { display: none; }
+.wup-toggle-track {
+  width: 40px;
+  height: 22px;
+  background: #cbd5e1;
+  border-radius: 99px;
+  position: relative;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.wup-toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.wup-toggle input:checked ~ .wup-toggle-track {
+  background: var(--wup-accent);
+}
+.wup-toggle input:checked ~ .wup-toggle-track::after {
+  transform: translateX(18px);
+}
+.wup-toggle-label {
+  font-size: 13px;
+  color: var(--wup-muted);
+}
+
+/* ── Actions bar ────────────────────────────────────────── */
+.wup-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--wup-card-bg);
+  border-radius: var(--wup-radius);
+  border: 1px solid var(--wup-border);
+  box-shadow: var(--wup-shadow);
+  margin-top: 4px;
+}
+.wup-btn-save {
+  background: var(--wup-accent);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 9px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  font-family: inherit;
+}
+.wup-btn-save:hover { background: var(--wup-accent-dark); transform: translateY(-1px); }
+.wup-btn-save:active { transform: translateY(0); }
+
+.wup-btn-secondary {
+  background: transparent;
+  color: var(--wup-muted);
+  border: 1.5px solid var(--wup-border);
+  border-radius: 7px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+  font-family: inherit;
+}
+.wup-btn-secondary:hover { border-color: var(--wup-muted); color: var(--wup-text); }
+
+.wup-save-notice {
+  font-size: 12px;
+  color: var(--wup-success);
+  font-weight: 500;
+  display: none;
+}
+.wup-save-notice.visible { display: inline; }
+
+/* ── Notice (WP settings-updated) ──────────────────────── */
+.wup-settings-wrap .notice,
+.wup-settings-wrap .updated,
+.wup-settings-wrap .error {
+  border-radius: 7px;
+  border-left-width: 4px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .wup-settings-wrap { flex-direction: column; }
+  .wup-sidebar { width: 100%; min-width: 0; border-radius: var(--wup-radius) var(--wup-radius) 0 0; position: static; }
+  .wup-sidebar nav { display: flex; flex-wrap: wrap; padding: 8px; }
+  .wup-sidebar nav a { padding: 7px 10px; font-size: 12px; }
+  .wup-content { border-radius: 0 0 var(--wup-radius) var(--wup-radius); padding: 20px; }
+  .wup-field { grid-template-columns: 1fr; gap: 6px; }
+  .wup-field-label { padding-top: 0; }
+}
