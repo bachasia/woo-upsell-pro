@@ -116,17 +116,32 @@ if ( ! class_exists( 'WUP_Variation_Resolver' ) ) {
 				}
 			}
 
+			// For variable products, use get_variation_price('min') — more reliable than get_price()
+			// which depends on the cached _price meta that can be stale or unset.
+			$price      = $is_variable
+				? (float) $product->get_variation_price( 'min' )
+				: (float) $product->get_price();
+			$price_html = $product->get_price_html();
+			// Fallback: if WC returns empty price_html but we have a min price, show it.
+			if ( $is_variable && empty( $price_html ) && $price > 0 ) {
+				$price_html = wc_price( $price );
+			}
+
+			// Total published variation count — NOT filtered by stock status.
+			// Used for the "show select when >= N options" threshold check, so that a product
+			// with e.g. 4 variants (3 OOS) still passes the threshold and shows its select.
+			$variation_count = $is_variable ? count( $product->get_children() ) : 0;
+
 			return [
 				'id'                 => (int) $product->get_id(),
-				'parent_id'          => $is_variable
-					? (int) $product->get_id()
-					: (int) $product->get_id(),
+				'parent_id'          => (int) $product->get_id(),
 				'product_type'       => $is_variable ? 'variable' : 'simple',
 				'default_name'       => wp_strip_all_tags( $product->get_name() ),
 				'url'                => esc_url( get_permalink( $product->get_id() ) ),
-				'thumbnail'          => woocommerce_get_product_thumbnail( $thumbnail_size, $product->get_id() ),
-				'price'              => (float) $product->get_price(),
-				'price_html'         => $product->get_price_html(),
+				'thumbnail'          => get_the_post_thumbnail( $product->get_id(), $thumbnail_size ),
+				'price'              => $price,
+				'price_html'         => $price_html,
+				'variation_count'    => $variation_count,
 				'default_attributes' => $default_attributes,
 				'attributes_empty'   => $attributes_empty,
 			];

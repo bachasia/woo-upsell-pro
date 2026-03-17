@@ -83,7 +83,8 @@ if ( ! class_exists( 'WUP_Bundle' ) ) {
 		 *
 		 * @param int $product_id Optional. Falls back to get_the_ID().
 		 */
-		public function render_bundle( int $product_id = 0 ): void {
+		public function render_bundle( $product_id = 0 ): void {
+		$product_id = intval( $product_id );
 			$product = wc_get_product( $product_id ?: get_the_ID() );
 			if ( ! $product instanceof WC_Product ) {
 				return;
@@ -91,7 +92,7 @@ if ( ! class_exists( 'WUP_Bundle' ) ) {
 
 			$products = WUP_Product_Source::resolve( $product->get_id(), [
 				'source' => wup_get_option( 'wup_upsell_bundle_source', 'related' ),
-				'limit'  => intval( wup_get_option( 'wup_upsell_bundle_limit', 4 ) ),
+				'limit'  => intval( wup_get_option( 'wup_upsell_bundle_limit', 2 ) ),
 			] );
 
 			if ( empty( $products ) ) {
@@ -157,7 +158,7 @@ if ( ! class_exists( 'WUP_Bundle' ) ) {
 			$product_cards = WUP_Variation_Resolver::build_product_cards( $all_items );
 			$all_ids       = array_map( static fn( WC_Product $p ) => $p->get_id(), $all_items );
 			$variants_map  = WUP_Variation_Resolver::build_variants_map( $all_ids );
-			$layout        = max( 1, min( 4, intval( wup_get_option( 'wup_upsell_bundle_layout', 2 ) ) ) );
+			$layout        = 1;
 
 			return [
 				'products'         => $product_cards,
