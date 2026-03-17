@@ -32,8 +32,8 @@ trait WUP_Settings_Schema {
 	private function schema_bundle(): array {
 		return [
 			[ 'id' => 'wup_upsell_bundle_enable',               'name' => 'Enable FBT Bundle',         'type' => 'checkbox', 'default' => 'no',      'tab' => 'wup-bundle' ],
-			[ 'id' => 'wup_upsell_bundle_position',             'name' => 'Position Hook',              'type' => 'select',   'default' => 'woocommerce_after_single_product_summary', 'tab' => 'wup-bundle',
-				'options' => [ 'woocommerce_single_product_summary' => 'Product Summary', 'woocommerce_after_single_product_summary' => 'After Summary', 'woocommerce_after_single_product' => 'After Product' ] ],
+			[ 'id' => 'wup_upsell_bundle_position',             'name' => 'Position',                   'type' => 'select',   'default' => 'below_add_to_cart', 'tab' => 'wup-bundle',
+				'options' => [ 'below_add_to_cart' => 'Below Add Cart Form', 'below_images' => 'Below Product Images', 'below_summary' => 'Below Product Summary', 'inside_summary' => 'Inside Product Summary', 'shortcode_only' => 'Shortcode Only' ] ],
 			[ 'id' => 'wup_upsell_bundle_priority',             'name' => 'Position Priority',         'type' => 'number',   'default' => 30,         'tab' => 'wup-bundle' ],
 			[ 'id' => 'wup_upsell_bundle_heading',              'name' => 'Section Heading',           'type' => 'text',     'default' => 'Frequently Bought Together', 'tab' => 'wup-bundle' ],
 			[ 'id' => 'wup_upsell_bundle_layout',               'name' => 'Layout',                    'type' => 'select',   'default' => '1',        'tab' => 'wup-bundle',
