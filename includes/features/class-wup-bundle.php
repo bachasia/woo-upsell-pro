@@ -4,6 +4,13 @@
  *
  * Renders the bundle block on single product pages and registers hooks.
  * AJAX handlers and coupon logic live in the WUP_Bundle_Ajax trait.
+ *
+ * Supported position keys (wup_upsell_bundle_position):
+ *   below_add_to_cart  — after add-to-cart form (default)
+ *   below_images       — between product images and summary
+ *   below_summary      — after the entire product summary section
+ *   inside_summary     — inside the product summary (after sharing links)
+ *   shortcode_only     — no automatic hook; use [wup_fbt_bundle] shortcode
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,6 +25,15 @@ if ( ! class_exists( 'WUP_Bundle' ) ) {
 
 		use WUP_Bundle_Ajax;
 
+		/** Maps position option values → WooCommerce action hooks. */
+		private const POSITION_MAP = [
+			'below_add_to_cart' => 'woocommerce_after_add_to_cart_form',
+			'below_images'      => 'woocommerce_before_single_product_summary',
+			'below_summary'     => 'woocommerce_after_single_product_summary',
+			'inside_summary'    => 'woocommerce_single_product_summary',
+			'shortcode_only'    => '', // no auto-hook
+		];
+
 		/** @var WUP_Bundle|null */
 		private static ?WUP_Bundle $instance = null;
 
@@ -31,9 +47,21 @@ if ( ! class_exists( 'WUP_Bundle' ) ) {
 		private function __construct() {
 			// Conditional hooks — only when feature is enabled.
 			if ( 'yes' === wup_get_option( 'wup_upsell_bundle_enable', 'no' ) ) {
-				$position = wup_get_option( 'wup_upsell_bundle_position', 'woocommerce_after_add_to_cart_form' );
-				$priority = intval( wup_get_option( 'wup_upsell_bundle_priority', 50 ) );
-				add_action( $position, [ $this, 'render_bundle' ], $priority );
+				$position_key = wup_get_option( 'wup_upsell_bundle_position', 'below_add_to_cart' );
+				$priority     = intval( wup_get_option( 'wup_upsell_bundle_priority', 50 ) );
+
+				// Resolve hook: known key → map; unknown value treated as raw hook name (backward compat).
+				$hook = array_key_exists( $position_key, self::POSITION_MAP )
+					? self::POSITION_MAP[ $position_key ]
+					: $position_key;
+
+				if ( $hook ) {
+					add_action( $hook, [ $this, 'render_bundle' ], $priority );
+				}
+
+				// Always register shortcode so [wup_fbt_bundle] works everywhere.
+				add_shortcode( 'wup_fbt_bundle', [ $this, 'render_bundle_shortcode' ] );
+
 				add_filter( 'woocommerce_get_shop_coupon_data', [ $this, 'virtual_bundle_coupon' ], 10, 2 );
 				add_action( 'woocommerce_before_calculate_totals', [ $this, 'apply_bundle_discount' ], 10, 1 );
 			}
@@ -78,13 +106,27 @@ if ( ! class_exists( 'WUP_Bundle' ) ) {
 			}
 		}
 
+		/**
+		 * Shortcode handler: [wup_fbt_bundle id="123"]
+		 * When `id` is omitted, falls back to current post ID.
+		 *
+		 * @param array|string $atts Shortcode attributes.
+		 * @return string Rendered HTML.
+		 */
+		public function render_bundle_shortcode( $atts ): string {
+			$atts = shortcode_atts( [ 'id' => 0 ], $atts, 'wup_fbt_bundle' );
+			ob_start();
+			$this->render_bundle( intval( $atts['id'] ) );
+			return ob_get_clean();
+		}
+
 		// ------------------------------------------------------------------ //
 		// Assets
 		// ------------------------------------------------------------------ //
 
-		/** Enqueue bundle JS on single product pages only. */
+		/** Enqueue bundle JS on product pages and pages containing the shortcode. */
 		public function enqueue_assets(): void {
-			if ( ! is_product() ) {
+			if ( ! is_product() && ! $this->page_has_bundle_shortcode() ) {
 				return;
 			}
 
@@ -136,6 +178,12 @@ if ( ! class_exists( 'WUP_Bundle' ) ) {
 				'hide_when'        => intval( wup_get_option( 'wup_upsell_bundle_hide_options_when', 2 ) ),
 				'nonce'            => wp_create_nonce( 'wup-add-bundle' ),
 			];
+		}
+
+		/** Check if the current post contains the [wup_fbt_bundle] shortcode. */
+		private function page_has_bundle_shortcode(): bool {
+			global $post;
+			return $post instanceof WP_Post && has_shortcode( $post->post_content, 'wup_fbt_bundle' );
 		}
 	}
 }
