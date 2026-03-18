@@ -222,6 +222,7 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 						<?php if ( $active_tab === 'wup-ai' ) : ?>
 							<?php $this->render_batch_embed_card(); ?>
 							<?php $this->render_similarity_index_card(); ?>
+							<?php $this->render_ai_cache_card(); ?>
 						<?php endif; ?>
 
 						<?php if ( $active_tab === 'wup-advanced' ) : ?>
@@ -453,6 +454,55 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 					.catch(function(e){
 						status.style.color = '#ef4444';
 						status.textContent = 'Network error: ' + e.message;
+						btn.disabled = false;
+					});
+				});
+			})();
+			</script>
+			<?php
+		}
+
+		/** Render the AI cache clear card (shown on AI Settings tab). */
+		private function render_ai_cache_card(): void {
+			$nonce = wp_create_nonce( 'wup_admin_nonce' );
+			?>
+			<div class="wup-card">
+				<div class="wup-card-title">Cache</div>
+				<div class="wup-field">
+					<div class="wup-field-label">
+						Clear AI Cache
+						<div class="wup-field-desc">Flush similarity transients — forces fresh lookups on next page load.</div>
+					</div>
+					<div class="wup-field-input">
+						<button type="button" id="wup-ai-flush-cache" class="wup-btn-secondary">
+							<?php esc_html_e( 'Clear Cache', 'woo-upsell-pro' ); ?>
+						</button>
+						<span id="wup-ai-flush-result" style="font-size:12px;color:#10b981;margin-left:10px;"></span>
+					</div>
+				</div>
+			</div>
+			<script>
+			(function(){
+				var btn = document.getElementById('wup-ai-flush-cache');
+				var res = document.getElementById('wup-ai-flush-result');
+				if (!btn) return;
+				btn.addEventListener('click', function(){
+					btn.disabled = true;
+					res.textContent = '…';
+					fetch(ajaxurl, {
+						method: 'POST',
+						headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+						body: new URLSearchParams({action: 'wup_flush_cache', nonce: '<?php echo esc_js( $nonce ); ?>'})
+					})
+					.then(function(r){ return r.json(); })
+					.then(function(d){
+						res.style.color = d.success ? '#10b981' : '#ef4444';
+						res.textContent = d.success ? d.data : ('Error: ' + (d.data || 'unknown'));
+						btn.disabled = false;
+					})
+					.catch(function(e){
+						res.style.color = '#ef4444';
+						res.textContent = 'Network error: ' + e.message;
 						btn.disabled = false;
 					});
 				});

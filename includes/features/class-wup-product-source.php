@@ -61,7 +61,10 @@ if ( ! class_exists( 'WUP_Product_Source' ) ) {
 			}
 
 			$ids = self::fetch_ids( $product_id, $args );
-			shuffle( $ids );
+			// Preserve similarity ranking for semantic source; shuffle only for term-based sources.
+			if ( 'semantic' !== $args['source'] ) {
+				shuffle( $ids );
+			}
 			$ids = array_slice( $ids, 0, (int) $args['limit'] );
 
 			if ( $args['include_self'] ) {
