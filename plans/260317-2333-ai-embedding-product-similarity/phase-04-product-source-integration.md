@@ -22,14 +22,17 @@ No changes needed in Bundle, Popup, Cart Upsell, Side Cart templates.
    if ( 'semantic' === $source ) {
        return WUP_Similarity_Search::find_similar(
            $product_id,
-           (int) $args['limit'] + 10,  // fetch extra, slice after exclude filter
-           [ $product_id ]             // always exclude self
+           (int) $args['limit'],  // pass exact limit — find_similar handles over-fetch internally
+           [ $product_id ]        // always exclude self
        );
    }
    ```
    Place this check BEFORE the `term_data` + SQL path — no changes to existing query logic.
+   > Do NOT pass `$limit + 10` — `find_similar()` fetches top-20 candidates internally
+   > then filters down to `$limit` valid results. Adding +10 here causes double over-fetch.
 
-2. **Add `require_once`** for similarity search class in `class-wup-product-source.php`.
+2. **Use autoloader** — do NOT add `require_once`. Register `includes/ai/` in the existing
+   class loader in `class-wup-plugin.php` (or wherever autoloading is configured).
 
 3. **Update settings schema** — add `'semantic' => 'AI Semantic (Recommended)'` to:
    - `wup_upsell_bundle_source`
