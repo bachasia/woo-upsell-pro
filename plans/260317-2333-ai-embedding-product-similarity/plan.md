@@ -28,6 +28,12 @@ At query time: cosine similarity lookup in PHP — zero API cost per customer vi
 - Phase 03 → 04 (search engine before source integration)
 - Phase 05 is standalone (admin-only, can be done last)
 
+## Design Principle
+
+`source = 'semantic'` is **one optional choice** alongside existing WooCommerce-native sources.
+Users who don't want AI simply keep using `related`, `tags`, `upsell`, `cross_sell`, or `specific` — no behavior changes for them.
+The AI feature is purely additive: it adds a new option to every source selector dropdown, nothing more.
+
 ## Architecture Decision
 
 - **Provider**: OpenAI `text-embedding-3-small` (1536 dims, cheapest, best quality/cost)
@@ -35,3 +41,4 @@ At query time: cosine similarity lookup in PHP — zero API cost per customer vi
 - **Storage**: `_wup_embedding` post_meta — JSON-encoded float array
 - **Query strategy**: PHP cosine similarity loop (fast enough for < 20k products with transient cache)
 - **Scope**: New `source = 'semantic'` option in WUP_Product_Source — reused by ALL upsell features
+- **Non-breaking**: All existing sources (`related`, `tags`, `cross_sell`, `upsell`, `specific`) remain unchanged

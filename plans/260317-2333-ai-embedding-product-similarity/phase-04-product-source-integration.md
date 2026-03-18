@@ -6,8 +6,10 @@
 
 ## Overview
 
-Add `source = 'semantic'` to `WUP_Product_Source`. All upsell features that use
-`WUP_Product_Source::resolve()` get AI similarity for free by changing one setting value.
+Add `source = 'semantic'` as one **optional** source mode to `WUP_Product_Source`.
+Users who prefer WooCommerce-native sources (`related`, `tags`, `upsell`, `cross_sell`, `specific`)
+continue using them unchanged — this phase only adds a new dropdown option, nothing is removed or changed.
+All upsell features that use `WUP_Product_Source::resolve()` get AI similarity by selecting `semantic` from the dropdown.
 No changes needed in Bundle, Popup, Cart Upsell, Side Cart templates.
 
 ## Related Code Files
@@ -34,7 +36,7 @@ No changes needed in Bundle, Popup, Cart Upsell, Side Cart templates.
 2. **Use autoloader** — do NOT add `require_once`. Register `includes/ai/` in the existing
    class loader in `class-wup-plugin.php` (or wherever autoloading is configured).
 
-3. **Update settings schema** — add `'semantic' => 'AI Semantic (Recommended)'` to:
+3. **Update settings schema** — append `'semantic' => 'AI Semantic'` to existing options of:
    - `wup_upsell_bundle_source`
    - `wup_upsell_popup_source` (if exists)
    - `wup_upsell_cart_source` (if exists)
