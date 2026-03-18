@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Core constants.
 define( 'WUP_FILE',          __FILE__ );
 define( 'WUP_VERSION',       '1.0.0' );
+define( 'WUP_DB_VERSION',    '1.1.0' );
 define( 'WUP_DIR',           plugin_dir_path( __FILE__ ) );
 define( 'WUP_URL',           plugin_dir_url( __FILE__ ) );
 define( 'WUP_SLUG',          'woo-upsell-pro/woo-upsell-pro.php' );

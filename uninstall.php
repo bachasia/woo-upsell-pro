@@ -18,6 +18,9 @@ $wpdb->query(
 	)
 );
 
+// Drop custom tables.
+$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}wup_similar" );
+
 // Clean up any autoloaded transients with wup_ prefix.
 $wpdb->query(
 	$wpdb->prepare(

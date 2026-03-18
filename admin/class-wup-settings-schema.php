@@ -23,7 +23,8 @@ trait WUP_Settings_Schema {
 			$this->schema_coupons(),
 			$this->schema_announcement(),
 			$this->schema_sales_popup(),
-			$this->schema_advanced()
+			$this->schema_advanced(),
+			$this->schema_ai()
 		);
 	}
 
@@ -39,7 +40,7 @@ trait WUP_Settings_Schema {
 			[ 'id' => 'wup_upsell_bundle_layout',               'name' => 'Layout',                    'type' => 'select',   'default' => '1',        'tab' => 'wup-bundle',
 				'options' => [ '1' => 'Layout 1', '2' => 'Layout 2', '3' => 'Layout 3', '4' => 'Layout 4' ] ],
 			[ 'id' => 'wup_upsell_bundle_source',               'name' => 'Product Source',            'type' => 'select',   'default' => 'related',  'tab' => 'wup-bundle',
-				'options' => [ 'related' => 'Related', 'cross_sell' => 'Cross-sells', 'upsell' => 'Upsells', 'categories' => 'By Category', 'tags' => 'By Tag' ] ],
+				'options' => [ 'related' => 'Related', 'cross_sell' => 'Cross-sells', 'upsell' => 'Upsells', 'categories' => 'By Category', 'tags' => 'By Tag', 'semantic' => 'AI Semantic' ] ],
 			[ 'id' => 'wup_upsell_bundle_limit',                'name' => 'Max Related Products',     'type' => 'number',   'default' => 2,          'tab' => 'wup-bundle' ],
 			[ 'id' => 'wup_upsell_bundle_categories',           'name' => 'Source Categories',        'type' => 'text',     'default' => '',         'tab' => 'wup-bundle', 'desc' => 'Comma-separated category IDs' ],
 			[ 'id' => 'wup_upsell_bundle_prefix',               'name' => 'Bundle Label Prefix',      'type' => 'text',     'default' => '[FBT]',    'tab' => 'wup-bundle' ],
@@ -60,7 +61,7 @@ trait WUP_Settings_Schema {
 		return [
 			[ 'id' => 'wup_upsell_popup_enable',                'name' => 'Enable Popup',             'type' => 'checkbox', 'default' => 'no',       'tab' => 'wup-popup' ],
 			[ 'id' => 'wup_upsell_popup_source',                'name' => 'Product Source',           'type' => 'select',   'default' => 'related',   'tab' => 'wup-popup',
-				'options' => [ 'related' => 'Related', 'cross_sell' => 'Cross-sells', 'upsell' => 'Upsells', 'categories' => 'By Category' ] ],
+				'options' => [ 'related' => 'Related', 'cross_sell' => 'Cross-sells', 'upsell' => 'Upsells', 'categories' => 'By Category', 'semantic' => 'AI Semantic' ] ],
 			[ 'id' => 'wup_upsell_popup_categories',            'name' => 'Source Categories',       'type' => 'text',     'default' => '',          'tab' => 'wup-popup' ],
 			[ 'id' => 'wup_upsell_popup_limit',                 'name' => 'Max Products',            'type' => 'number',   'default' => 3,           'tab' => 'wup-popup' ],
 			[ 'id' => 'wup_upsell_popup_heading_text',          'name' => 'Popup Heading',           'type' => 'text',     'default' => 'You might also like…', 'tab' => 'wup-popup' ],
@@ -154,18 +155,18 @@ trait WUP_Settings_Schema {
 		return [
 			[ 'id' => 'wup_cart_upsell_enable',                 'name' => 'Enable Cart Upsell',      'type' => 'checkbox', 'default' => 'no',       'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_cart_upsell_source',                 'name' => 'Cart Source',              'type' => 'select',   'default' => 'related',   'tab' => 'wup-cart',
-				'options' => [ 'related' => 'Related', 'cross_sell' => 'Cross-sells', 'categories' => 'By Category' ] ],
+				'options' => [ 'related' => 'Related', 'cross_sell' => 'Cross-sells', 'categories' => 'By Category', 'semantic' => 'AI Semantic' ] ],
 			[ 'id' => 'wup_cart_upsell_categories',             'name' => 'Cart Categories',          'type' => 'text',     'default' => '',          'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_cart_upsell_limit',                  'name' => 'Cart Max Products',        'type' => 'number',   'default' => 4,           'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_cart_upsell_heading',                'name' => 'Cart Heading',             'type' => 'text',     'default' => 'You might also like', 'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_thankyou_upsell_enable',             'name' => 'Enable Thank-you Upsell',  'type' => 'checkbox', 'default' => 'no',       'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_thankyou_upsell_source',             'name' => 'Thank-you Source',         'type' => 'select',   'default' => 'related',   'tab' => 'wup-cart',
-				'options' => [ 'related' => 'Related', 'cross_sell' => 'Cross-sells', 'categories' => 'By Category' ] ],
+				'options' => [ 'related' => 'Related', 'cross_sell' => 'Cross-sells', 'categories' => 'By Category', 'semantic' => 'AI Semantic' ] ],
 			[ 'id' => 'wup_thankyou_upsell_limit',              'name' => 'Thank-you Max Products',   'type' => 'number',   'default' => 4,           'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_thankyou_upsell_heading',            'name' => 'Thank-you Heading',        'type' => 'text',     'default' => 'You might also like', 'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_related_enable',                     'name' => 'Enable Related Products',  'type' => 'checkbox', 'default' => 'no',       'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_related_source',                     'name' => 'Related Source',           'type' => 'select',   'default' => 'related',   'tab' => 'wup-cart',
-				'options' => [ 'related' => 'Related', 'upsell' => 'Upsells', 'categories' => 'By Category' ] ],
+				'options' => [ 'related' => 'Related', 'upsell' => 'Upsells', 'categories' => 'By Category', 'semantic' => 'AI Semantic' ] ],
 			[ 'id' => 'wup_related_limit',                      'name' => 'Related Max Products',     'type' => 'number',   'default' => 4,           'tab' => 'wup-cart' ],
 			[ 'id' => 'wup_related_position',                   'name' => 'Related Position Hook',    'type' => 'select',   'default' => 'woocommerce_after_single_product', 'tab' => 'wup-cart',
 				'options' => [ 'woocommerce_after_single_product' => 'After Product', 'woocommerce_after_single_product_summary' => 'After Summary' ] ],
@@ -223,6 +224,32 @@ trait WUP_Settings_Schema {
 			[ 'id' => 'wup_popup_msg_template',                 'name' => 'Message Template',        'type' => 'text',     'default' => '{{name}} from {{city}} just bought {{product}} {{time}} ago', 'tab' => 'wup-sales-popup' ],
 			[ 'id' => 'wup_popup_names',                        'name' => 'Customer Names',          'type' => 'textarea', 'default' => "Emma\nLiam\nOlivia\nNoah\nAva", 'tab' => 'wup-sales-popup', 'desc' => 'One per line' ],
 			[ 'id' => 'wup_popup_cities',                       'name' => 'Cities',                  'type' => 'textarea', 'default' => "New York\nLos Angeles\nChicago\nHouston\nPhoenix", 'tab' => 'wup-sales-popup', 'desc' => 'One per line' ],
+		];
+	}
+
+	// ── AI Embeddings ─────────────────────────────────────────────────────────────
+
+	private function schema_ai(): array {
+		return [
+			[ 'id' => 'wup_ai_provider',                        'name' => 'AI Provider',             'type' => 'select',   'default' => 'openai',   'tab' => 'wup-ai',
+				'options' => [ 'openai' => 'OpenAI' ] ],
+			[ 'id' => 'wup_ai_api_key',                         'name' => 'API Key',                 'type' => 'password', 'default' => '',         'tab' => 'wup-ai',
+				'desc' => 'OpenAI API key — used only for generating embeddings, not per customer visit' ],
+			[ 'id' => 'wup_ai_embedding_model',                 'name' => 'Embedding Model',         'type' => 'select',   'default' => 'text-embedding-3-small', 'tab' => 'wup-ai',
+				'options' => [ 'text-embedding-3-small' => 'text-embedding-3-small (recommended)', 'text-embedding-3-large' => 'text-embedding-3-large (higher quality, ~6× cost)' ] ],
+			[ 'id' => 'wup_ai_embedding_dimensions',            'name' => 'Vector Dimensions',       'type' => 'select',   'default' => '256',      'tab' => 'wup-ai',
+				'desc' => 'Lower = smaller DB storage & faster queries; higher = better accuracy. 256 recommended for most stores.',
+				'options' => [ '256' => '256 (compact, ~3KB/product)', '512' => '512 (~6KB/product)', '1536' => '1536 full (default model max, ~18KB/product)' ] ],
+			[ 'id' => 'wup_ai_embed_use_title',                 'name' => 'Include Title',           'type' => 'locked_checkbox', 'default' => 'yes', 'tab' => 'wup-ai',
+				'desc' => 'Product title is always included in the embedding text' ],
+			[ 'id' => 'wup_ai_embed_use_tags',                  'name' => 'Include Tags',            'type' => 'checkbox', 'default' => 'yes',      'tab' => 'wup-ai',
+				'desc' => 'Include product tags in the embedding text' ],
+			[ 'id' => 'wup_ai_embed_use_attributes',            'name' => 'Include Attributes',     'type' => 'checkbox', 'default' => 'yes',      'tab' => 'wup-ai',
+				'desc' => 'Include product attributes (size, color, etc.) in the embedding text' ],
+			[ 'id' => 'wup_ai_embed_use_category',              'name' => 'Include Category',       'type' => 'checkbox', 'default' => 'yes',      'tab' => 'wup-ai',
+				'desc' => 'Include the leaf category name in the embedding text' ],
+			[ 'id' => 'wup_ai_embed_use_description',           'name' => 'Include Description',    'type' => 'checkbox', 'default' => 'yes',      'tab' => 'wup-ai',
+				'desc' => 'Include the short description in the embedding text' ],
 		];
 	}
 

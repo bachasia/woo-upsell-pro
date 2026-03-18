@@ -33,6 +33,7 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 			'wup-announcement' => 'Announcements',
 			'wup-sales-popup'  => 'Sales Popups',
 			'wup-advanced'     => 'Advanced',
+			'wup-ai'           => 'AI Settings',
 		];
 
 		public static function get_instance(): self {
@@ -52,7 +53,7 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 		/** Register each setting with WordPress so it can be saved/read. */
 		public function register_settings(): void {
 			foreach ( $this->get_schema() as $field ) {
-				if ( empty( $field['id'] ) ) {
+				if ( empty( $field['id'] ) || $field['type'] === 'locked_checkbox' ) {
 					continue;
 				}
 
@@ -218,6 +219,11 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 							<?php endforeach; ?>
 						</div>
 
+						<?php if ( $active_tab === 'wup-ai' ) : ?>
+							<?php $this->render_batch_embed_card(); ?>
+							<?php $this->render_similarity_index_card(); ?>
+						<?php endif; ?>
+
 						<?php if ( $active_tab === 'wup-advanced' ) : ?>
 							<div class="wup-card">
 								<div class="wup-card-title">Cache</div>
@@ -255,6 +261,206 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 			<?php
 		}
 
+		/** Render the batch embedding card (shown only on the AI Settings tab). */
+		private function render_batch_embed_card(): void {
+			// Count embedded vs total published products.
+			$total_products = (int) wp_count_posts( 'product' )->publish;
+			global $wpdb;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$embedded_count = (int) $wpdb->get_var(
+				"SELECT COUNT(DISTINCT post_id) FROM {$wpdb->postmeta} WHERE meta_key = '_wup_embedding'"
+			);
+			$remaining      = max( 0, $total_products - $embedded_count );
+
+			// Cost estimate: ~300 tokens × $0.02/1M tokens per product.
+			$cost_estimate = number_format( $remaining * 300 * 0.00000002, 4 );
+			$api_key       = get_option( 'wup_ai_api_key', '' );
+			$nonce         = wp_create_nonce( 'wup_batch_embed' );
+			?>
+			<div class="wup-card">
+				<div class="wup-card-title">Product Embeddings</div>
+				<div class="wup-field">
+					<div class="wup-field-label">
+						Status
+						<div class="wup-field-desc">Products with AI embeddings generated</div>
+					</div>
+					<div class="wup-field-input">
+						<span id="wup-embed-count"><?php echo esc_html( $embedded_count ); ?></span> / <?php echo esc_html( $total_products ); ?>
+						<?php if ( $remaining > 0 ) : ?>
+							&nbsp;&mdash;&nbsp;<small>Estimated cost for remaining <?php echo esc_html( $remaining ); ?>: ~$<?php echo esc_html( $cost_estimate ); ?></small>
+						<?php else : ?>
+							&nbsp;<span style="color:#10b981;">&#10003; All products embedded</span>
+						<?php endif; ?>
+					</div>
+				</div>
+				<?php if ( $api_key ) : ?>
+				<div class="wup-field">
+					<div class="wup-field-label">
+						Generate Embeddings
+						<div class="wup-field-desc">Process all products without an embedding. Resumes where it left off.</div>
+					</div>
+					<div class="wup-field-input">
+						<button type="button" id="wup-batch-embed-btn" class="wup-btn-secondary">Generate Embeddings for All Products</button>
+						<div id="wup-batch-embed-progress" style="display:none;margin-top:10px;">
+							<div style="background:#e5e7eb;border-radius:4px;height:8px;width:360px;overflow:hidden;">
+								<div id="wup-batch-embed-bar" style="background:#10b981;height:100%;width:0;transition:width .3s;"></div>
+							</div>
+							<div style="margin-top:6px;font-size:12px;">
+								<span id="wup-batch-embed-status">Starting…</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script>
+				(function(){
+					var btn      = document.getElementById('wup-batch-embed-btn');
+					var progress = document.getElementById('wup-batch-embed-progress');
+					var bar      = document.getElementById('wup-batch-embed-bar');
+					var status   = document.getElementById('wup-batch-embed-status');
+					var count    = document.getElementById('wup-embed-count');
+
+					if (!btn) return;
+
+					btn.addEventListener('click', function(){
+						btn.disabled = true;
+						progress.style.display = 'block';
+						runBatch(0, 0);
+					});
+
+					function runBatch(offset, totalDone) {
+						fetch(ajaxurl, {
+							method: 'POST',
+							headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+							body: new URLSearchParams({
+								action: 'wup_batch_embed',
+								nonce: '<?php echo esc_js( $nonce ); ?>',
+								offset: offset,
+								batch_size: 50
+							})
+						})
+						.then(function(r){ return r.json(); })
+						.then(function(d){
+							if (!d.success) {
+								status.textContent = 'Error: ' + (d.data || 'unknown');
+								btn.disabled = false;
+								return;
+							}
+							var data     = d.data;
+							var done     = totalDone + data.processed;
+							var pct      = data.total > 0 ? Math.round(done / data.total * 100) : 100;
+							bar.style.width = pct + '%';
+							status.textContent = done + ' / ' + data.total + ' embedded' + (data.errors > 0 ? ' (' + data.errors + ' errors)' : '');
+							if (count) count.textContent = data.embedded_total;
+
+							if (data.done) {
+								if (data.embedded_total > 0) {
+									status.textContent = data.embedded_total + ' products embedded — Done!';
+								} else {
+									status.textContent = done + ' processed, 0 saved — check WooCommerce logs';
+								}
+								btn.disabled = false;
+								return;
+							}
+							// Rate-limit: ~900ms between batches to respect OpenAI TPM limits.
+							setTimeout(function(){ runBatch(offset + data.processed, done); }, 900);
+						})
+						.catch(function(e){
+							status.textContent = 'Network error: ' + e.message;
+							btn.disabled = false;
+						});
+					}
+				})();
+				</script>
+				<?php else : ?>
+				<div class="wup-field">
+					<div class="wup-field-label" colspan="2">
+						<div class="wup-field-desc" style="color:#f59e0b;">&#9888; Enter your API key above and save settings to enable batch generation.</div>
+					</div>
+				</div>
+				<?php endif; ?>
+			</div>
+			<?php
+		}
+
+		/** Render the similarity index status + rebuild card (shown on AI Settings tab). */
+		private function render_similarity_index_card(): void {
+			$indexed        = WUP_Similarity_Index::count_indexed();
+			$embedded       = WUP_Similarity_Batch::count_embedded_products();
+			$last_built_ts  = (int) get_option( 'wup_similarity_last_full_build', 0 );
+			$last_computed  = WUP_Similarity_Index::get_last_computed();
+			$nonce          = wp_create_nonce( 'wup_batch_embed' );
+
+			$last_built_str = $last_built_ts
+				? esc_html( human_time_diff( $last_built_ts, time() ) . ' ago' )
+				: 'Never';
+			?>
+			<div class="wup-card">
+				<div class="wup-card-title">Similarity Index</div>
+				<div class="wup-field">
+					<div class="wup-field-label">
+						Index Status
+						<div class="wup-field-desc">Pre-computed product similarity rows — enables O(1) lookups</div>
+					</div>
+					<div class="wup-field-input">
+						<span id="wup-sim-indexed"><?php echo esc_html( $indexed ); ?></span> / <?php echo esc_html( $embedded ); ?> products indexed
+						<?php if ( $indexed > 0 && $indexed >= $embedded ) : ?>
+							&nbsp;<span style="color:#10b981;">&#10003; Index complete</span>
+						<?php elseif ( $indexed > 0 ) : ?>
+							&nbsp;<span style="color:#f59e0b;">&#9888; Partial index (<?php echo esc_html( $embedded - $indexed ); ?> missing)</span>
+						<?php else : ?>
+							&nbsp;<span style="color:#6b7280;">Not built yet</span>
+						<?php endif; ?>
+						<div style="font-size:11px;color:#6b7280;margin-top:3px;">Last full build: <span id="wup-sim-last-built"><?php echo esc_html( $last_built_str ); ?></span></div>
+					</div>
+				</div>
+				<div class="wup-field">
+					<div class="wup-field-label">
+						Rebuild Index
+						<div class="wup-field-desc">Schedule a full background rebuild via Action Scheduler</div>
+					</div>
+					<div class="wup-field-input">
+						<button type="button" id="wup-rebuild-sim-btn" class="wup-btn-secondary"<?php echo $embedded === 0 ? ' disabled' : ''; ?>>
+							Rebuild Similarity Index
+						</button>
+						<span id="wup-rebuild-sim-status" style="font-size:12px;margin-left:10px;"></span>
+					</div>
+				</div>
+			</div>
+			<script>
+			(function(){
+				var btn    = document.getElementById('wup-rebuild-sim-btn');
+				var status = document.getElementById('wup-rebuild-sim-status');
+				if (!btn) return;
+				btn.addEventListener('click', function(){
+					btn.disabled = true;
+					status.textContent = 'Scheduling…';
+					fetch(ajaxurl, {
+						method: 'POST',
+						headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+						body: new URLSearchParams({action: 'wup_rebuild_similarity', nonce: '<?php echo esc_js( $nonce ); ?>'})
+					})
+					.then(function(r){ return r.json(); })
+					.then(function(d){
+						if (d.success) {
+							status.style.color = '#10b981';
+							status.textContent = 'Rebuild scheduled — runs in the background.';
+						} else {
+							status.style.color = '#ef4444';
+							status.textContent = 'Error: ' + (d.data || 'unknown');
+						}
+						btn.disabled = false;
+					})
+					.catch(function(e){
+						status.style.color = '#ef4444';
+						status.textContent = 'Network error: ' + e.message;
+						btn.disabled = false;
+					});
+				});
+			})();
+			</script>
+			<?php
+		}
+
 		/** Output a single settings field input. */
 		private function render_field( array $field ): void {
 			$id    = esc_attr( $field['id'] );
@@ -279,6 +485,19 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 
 				case 'color':
 					echo '<input type="color" id="' . $id . '" name="' . $id . '" value="' . esc_attr( (string) $value ) . '">';
+					break;
+
+				case 'locked_checkbox':
+					// Read-only toggle — always on, cannot be changed.
+					echo '<label class="wup-toggle" style="pointer-events:none;opacity:.7;">';
+					echo '<input type="checkbox" checked disabled>';
+					echo '<span class="wup-toggle-track"></span>';
+					echo '<span class="wup-toggle-label">' . esc_html__( 'Always enabled', 'woo-upsell-pro' ) . '</span>';
+					echo '</label>';
+					break;
+
+				case 'password':
+					echo '<input type="password" id="' . $id . '" name="' . $id . '" value="' . esc_attr( (string) $value ) . '" autocomplete="new-password" style="width:360px;">';
 					break;
 
 				case 'select':

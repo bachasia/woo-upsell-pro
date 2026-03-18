@@ -26,6 +26,32 @@ if ( ! class_exists( 'WUP_Activator' ) ) {
 				update_option( 'wup_activated_time', time(), false );
 			}
 			update_option( 'wup_version', WUP_VERSION, false );
+			self::create_tables();
+			update_option( 'wup_db_version', WUP_DB_VERSION, false );
+		}
+
+		/**
+		 * Create or upgrade custom DB tables using dbDelta (idempotent).
+		 * Called on activation and on version upgrade.
+		 */
+		public static function create_tables(): void {
+			global $wpdb;
+
+			$table   = $wpdb->prefix . 'wup_similar';
+			$charset = $wpdb->get_charset_collate();
+
+			// Note: dbDelta requires exactly two spaces before PRIMARY KEY.
+			$sql = "CREATE TABLE {$table} (
+  product_id bigint(20) UNSIGNED NOT NULL,
+  similar_ids text NOT NULL,
+  model varchar(64) NOT NULL,
+  dims smallint(6) UNSIGNED NOT NULL DEFAULT 0,
+  computed_at datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY  (product_id)
+) {$charset};";
+
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			dbDelta( $sql );
 		}
 
 		/** Runs on plugin deactivation — intentionally empty. */

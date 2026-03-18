@@ -111,6 +111,21 @@ if ( ! class_exists( 'WUP_Product_Source' ) ) {
 		private static function fetch_ids( int $product_id, array $args ): array {
 			$source = $args['source'];
 
+			// AI semantic similarity — uses embedding vectors, no term queries needed.
+			// Falls back to 'related' when the product has no embedding yet.
+			if ( 'semantic' === $source ) {
+				$ids = WUP_Similarity_Search::find_similar(
+					$product_id,
+					(int) $args['limit'],  // find_similar handles internal over-fetch + filtering
+					[ $product_id ]
+				);
+				if ( ! empty( $ids ) ) {
+					return $ids;
+				}
+				// Graceful fallback: product not yet embedded — serve 'related' source instead.
+				$source = 'related';
+			}
+
 			// Direct WC meta modes — no SQL needed.
 			if ( 'upsell' === $source ) {
 				$p = wc_get_product( $product_id );
