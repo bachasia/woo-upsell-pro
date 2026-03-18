@@ -37,7 +37,9 @@ zip -r "$OUTPUT" "$PLUGIN_SLUG" \
   --exclude "$PLUGIN_SLUG/**/.DS_Store" \
   --exclude "$PLUGIN_SLUG/*.map" \
   --exclude "$PLUGIN_SLUG/public/js/build/*.map" \
-  --exclude "$PLUGIN_SLUG/public/css/*.map"
+  --exclude "$PLUGIN_SLUG/public/css/*.map" \
+  --exclude "$PLUGIN_SLUG/.claude/*" \
+  --exclude "$PLUGIN_SLUG/.claude"
 
 echo "Done: $OUTPUT"
 echo "Size: $(du -sh "$OUTPUT" | cut -f1)"
