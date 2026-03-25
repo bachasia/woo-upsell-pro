@@ -47,7 +47,9 @@ if ( ! class_exists( 'WUP_Variation_Resolver' ) ) {
 						continue;
 					}
 
-					$attrs = [];
+					$attrs = [
+						'_price' => (float) $variation->get_price(),
+					];
 					foreach ( $variation->get_attributes() as $attr_name => $attr_value ) {
 						$attrs[ sanitize_text_field( $attr_name ) ] = sanitize_text_field( $attr_value );
 					}
