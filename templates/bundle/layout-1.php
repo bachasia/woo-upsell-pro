@@ -79,9 +79,13 @@ extract( $bundle_data ); // phpcs:ignore WordPress.PHP.DontExtract -- template c
 						data-id="<?php echo esc_attr( $card['id'] ); ?>"
 						name="variation_<?php echo esc_attr( $card['id'] ); ?>">
 						<option value=""><?php esc_html_e( '-- Select --', 'woo-upsell-pro' ); ?></option>
-						<?php foreach ( $variants[ $card['id'] ] as $var_id => $attrs ) : ?>
-							<option value="<?php echo esc_attr( $var_id ); ?>">
-								<?php echo esc_html( implode( ' / ', array_values( $attrs ) ) ); ?>
+						<?php foreach ( $variants[ $card['id'] ] as $var_id => $attrs ) :
+							$var_price     = $attrs['_price'] ?? '';
+							$display_attrs = array_filter( $attrs, fn( $k ) => '_' !== $k[0], ARRAY_FILTER_USE_KEY );
+						?>
+							<option value="<?php echo esc_attr( $var_id ); ?>"
+								data-price="<?php echo esc_attr( $var_price ); ?>">
+								<?php echo esc_html( implode( ' / ', array_values( $display_attrs ) ) ); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
