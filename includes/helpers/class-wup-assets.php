@@ -33,7 +33,8 @@ if ( ! class_exists( 'WUP_Assets' ) ) {
 		}
 
 		private function __construct() {
-			add_action( 'wp_enqueue_scripts',    [ $this, 'enqueue_public_assets' ] );
+			// Priority 5: register handles early so feature classes can enqueue/localize at default priority.
+			add_action( 'wp_enqueue_scripts',    [ $this, 'enqueue_public_assets' ], 5 );
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
 		}
 
