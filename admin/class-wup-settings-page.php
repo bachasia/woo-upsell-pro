@@ -90,6 +90,13 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 
 			check_admin_referer( 'wup_save_settings', 'wup_nonce' );
 
+			// Block saves for disabled feature tabs.
+			$active_tab = sanitize_key( $_GET['tab'] ?? array_key_first( $this->tabs ) );
+			if ( ! WUP_Plugin::is_feature_active( $active_tab ) ) {
+				add_settings_error( 'wup_messages', 'wup_locked', __( 'This feature is not yet available.', 'woo-upsell-pro' ), 'error' );
+				return;
+			}
+
 			// Only save fields for the active tab — other tabs' fields are not in $_POST,
 			// so iterating all schema would reset their checkbox values to 'no'.
 			$active_tab = sanitize_key( $_GET['tab'] ?? array_key_first( $this->tabs ) );
@@ -162,8 +169,9 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 				$active_tab = array_key_first( $this->tabs );
 			}
 
-			$fields = array_filter( $this->get_schema(), fn( $f ) => ( $f['tab'] ?? '' ) === $active_tab );
-			$saved  = isset( $_GET['settings-updated'] );
+			$fields     = array_filter( $this->get_schema(), fn( $f ) => ( $f['tab'] ?? '' ) === $active_tab );
+			$saved      = isset( $_GET['settings-updated'] );
+			$tab_locked = ! WUP_Plugin::is_feature_active( $active_tab );
 			?>
 			<div class="wrap wup-settings-wrap">
 
@@ -174,11 +182,19 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 						<span>Settings</span>
 					</div>
 					<nav>
-						<?php foreach ( $this->tabs as $slug => $label ) : ?>
+						<?php foreach ( $this->tabs as $slug => $label ) :
+						$is_active_feature = WUP_Plugin::is_feature_active( $slug );
+						$classes = [];
+						if ( $slug === $active_tab ) { $classes[] = 'active'; }
+						if ( ! $is_active_feature )  { $classes[] = 'wup-tab-disabled'; }
+					?>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wup-settings&tab=' . $slug ) ); ?>"
-							   class="<?php echo $slug === $active_tab ? 'active' : ''; ?>">
+							   class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 								<span class="wup-nav-icon dashicons <?php echo esc_attr( $this->tab_icons[ $slug ] ?? 'dashicons-admin-generic' ); ?>"></span>
 								<?php echo esc_html( $label ); ?>
+								<?php if ( ! $is_active_feature ) : ?>
+									<span class="wup-badge-soon">Soon</span>
+								<?php endif; ?>
 							</a>
 						<?php endforeach; ?>
 					</nav>
@@ -197,12 +213,19 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 						<h2><?php echo esc_html( $this->tabs[ $active_tab ] ); ?></h2>
 					</div>
 
+					<?php if ( $tab_locked ) : ?>
+						<div class="wup-coming-soon-banner">
+							<span class="dashicons dashicons-lock"></span>
+							<?php esc_html_e( 'This feature is coming soon. Settings are shown for preview only.', 'woo-upsell-pro' ); ?>
+						</div>
+					<?php endif; ?>
+
 					<form method="post" action="">
 						<?php wp_nonce_field( 'wup_save_settings', 'wup_nonce' ); ?>
 						<input type="hidden" name="wup_save_settings" value="1">
 
 						<!-- Fields card -->
-						<div class="wup-card">
+						<div class="wup-card<?php echo $tab_locked ? ' wup-fields-locked' : ''; ?>">
 							<div class="wup-card-title"><?php echo esc_html( $this->tabs[ $active_tab ] ); ?> Options</div>
 							<?php foreach ( $fields as $field ) : ?>
 								<div class="wup-field">
@@ -253,9 +276,11 @@ if ( ! class_exists( 'WUP_Settings_Page' ) ) {
 						<?php endif; ?>
 
 						<!-- Actions bar -->
+						<?php if ( ! $tab_locked ) : ?>
 						<div class="wup-actions">
 							<button type="submit" class="wup-btn-save"><?php esc_html_e( 'Save Settings', 'woo-upsell-pro' ); ?></button>
 						</div>
+						<?php endif; ?>
 					</form>
 				</div>
 			</div>
