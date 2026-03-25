@@ -9,6 +9,26 @@
         wupUpdateBundleTotal();
     });
 
+    // Bundle: variant change → update item price + recalculate total
+    $(document).on('change', '.wup-variant-select', function() {
+        var $select = $(this);
+        var $item   = $select.closest('.wup-bundle-item');
+        var $option = $select.find(':selected');
+        var newPrice = $option.data('price');
+
+        if (newPrice !== undefined && newPrice !== '') {
+            $item.data('price', parseFloat(newPrice));
+            $item.attr('data-price', newPrice);
+            // Update visible per-item price display.
+            $item.find('.upsell-bundle__price').html(wupFormatPriceHtml(parseFloat(newPrice)));
+        }
+
+        // Sync variation ID for add-to-cart.
+        $item.attr('data-variation-id', $select.val() || 0);
+
+        wupUpdateBundleTotal();
+    });
+
     // Bundle: update total price display
     function wupUpdateBundleTotal() {
         let total = 0;
@@ -25,6 +45,17 @@
 
     function wupFormatPrice(price) {
         return parseFloat(price).toFixed(2);
+    }
+
+    // Build WC-style price HTML from a numeric value.
+    function wupFormatPriceHtml(price) {
+        // Read currency symbol from the first existing price element on the page.
+        var $existing = $('.woocommerce-Price-currencySymbol').first();
+        var symbol = $existing.length ? $existing.text() : '$';
+        return '<span class="woocommerce-Price-amount amount"><bdi>'
+            + '<span class="woocommerce-Price-currencySymbol">' + symbol + '</span>'
+            + parseFloat(price).toFixed(2)
+            + '</bdi></span>';
     }
 
     // Bundle: add all selected items to cart
