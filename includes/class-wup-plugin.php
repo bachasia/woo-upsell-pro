@@ -14,6 +14,23 @@ if ( ! class_exists( 'WUP_Plugin' ) ) {
 
 	final class WUP_Plugin {
 
+		/** Feature whitelist — only these tabs have their feature classes instantiated. */
+		public const ACTIVE_FEATURES = [
+			'wup-bundle'       => true,
+			'wup-bmsm'         => true,
+			'wup-popup'        => false,
+			'wup-sidecart'     => false,
+			'wup-cart'         => false,
+			'wup-coupon'       => false,
+			'wup-announcement' => false,
+			'wup-sales-popup'  => false,
+		];
+
+		/** Check if a feature tab is active. Tabs not in the list (e.g. advanced, ai) default to true. */
+		public static function is_feature_active( string $tab ): bool {
+			return self::ACTIVE_FEATURES[ $tab ] ?? true;
+		}
+
 		/** @var WUP_Plugin|null */
 		private static ?WUP_Plugin $instance = null;
 
@@ -60,36 +77,50 @@ if ( ! class_exists( 'WUP_Plugin' ) ) {
 			WUP_Bundle::get_instance();
 			WUP_Product_Fields::get_instance();
 
-			// Phase 03 — Popup + Side Cart.
+			// Phase 03 — Popup + Side Cart (gated).
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-popup.php';
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-side-cart.php';
-			WUP_Popup::get_instance();
-			WUP_Side_Cart::get_instance();
+			if ( self::is_feature_active( 'wup-popup' ) ) {
+				WUP_Popup::get_instance();
+			}
+			if ( self::is_feature_active( 'wup-sidecart' ) ) {
+				WUP_Side_Cart::get_instance();
+			}
 
-			// Phase 04 — Cart Upsell + Thank-you Upsell + Related Products.
+			// Phase 04 — Cart Upsell + Thank-you Upsell + Related Products (gated).
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-renderer.php';
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-cart-upsell.php';
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-thankyou-upsell.php';
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-related.php';
-			WUP_Cart_Upsell::get_instance();
-			WUP_Thankyou_Upsell::get_instance();
-			WUP_Related::get_instance();
+			if ( self::is_feature_active( 'wup-cart' ) ) {
+				WUP_Cart_Upsell::get_instance();
+				WUP_Thankyou_Upsell::get_instance();
+				WUP_Related::get_instance();
+			}
 
 			// Phase 05 — Buy More Save More.
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-buy-more-save-more.php';
-			WUP_BuyMoreSaveMore::get_instance();
+			if ( self::is_feature_active( 'wup-bmsm' ) ) {
+				WUP_BuyMoreSaveMore::get_instance();
+			}
 
-			// Phase 06 — Announcement Bars + Sales Popups.
+			// Phase 06 — Announcement Bars + Sales Popups (gated).
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-announcement.php';
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-sales-popup.php';
-			WUP_Announcement::get_instance();
-			WUP_Sales_Popup::get_instance();
+			if ( self::is_feature_active( 'wup-announcement' ) ) {
+				WUP_Announcement::get_instance();
+			}
+			if ( self::is_feature_active( 'wup-sales-popup' ) ) {
+				WUP_Sales_Popup::get_instance();
+			}
 
-			// Phase 07 — Email Coupon + FOMO Stock Counter.
+			// Phase 07 — Email Coupon + FOMO Stock Counter (gated).
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-email-coupon.php';
 			require_once WUP_INCLUDES_DIR . 'features/class-wup-fomo-stock.php';
-			WUP_Email_Coupon::get_instance();
-			WUP_Fomo_Stock::get_instance();
+			if ( self::is_feature_active( 'wup-coupon' ) ) {
+				WUP_Email_Coupon::get_instance();
+				WUP_Fomo_Stock::get_instance();
+			}
 
 			// Boot admin subsystem.
 			if ( is_admin() ) {
