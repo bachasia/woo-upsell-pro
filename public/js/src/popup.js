@@ -32,7 +32,7 @@
     // Bundle: update total price display
     function wupUpdateBundleTotal() {
         let total = 0;
-        $('.wup-bundle-items [data-price]').each(function() {
+        $('.wup-bundle-items .wup-bundle-item[data-price]').each(function() {
             const $item = $(this);
             const $checkbox = $item.find('.wup-item-checkbox');
             if ($checkbox.length && !$checkbox.is(':checked')) {
